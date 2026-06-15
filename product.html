@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bridal Lac Set — Rang Mahal Jaipur</title>
+  <link rel="stylesheet" href="assets/css/styles.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+
+    /* ── Breadcrumb ── */
+    .breadcrumb-bar {
+      padding: 16px 40px;
+      border-bottom: 1px solid var(--border);
+      background: var(--cream);
+    }
+    .breadcrumb {
+      max-width: 1440px; margin: 0 auto;
+      display: flex; align-items: center; gap: 8px;
+      font-size: 12px; color: var(--text-3);
+    }
+    .breadcrumb a { color: var(--text-3); transition: color var(--t); }
+    .breadcrumb a:hover { color: var(--orange); }
+    .breadcrumb i { font-size: 8px; }
+
+    /* ── Product Layout ── */
+    .product-wrap {
+      max-width: 1440px; margin: 0 auto;
+      padding: 48px 40px 80px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 72px;
+      align-items: start;
+    }
+
+    /* ── Left: Images ── */
+    .product-main-img {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+    .product-main-img .ph {
+      width: 100%; height: 100%;
+    }
+
+    .product-thumbs {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-top: 12px;
+    }
+    .thumb {
+      aspect-ratio: 1 / 1;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 2px solid transparent;
+      cursor: pointer;
+      transition: border-color var(--t);
+    }
+    .thumb.active,
+    .thumb:hover { border-color: var(--orange); }
+    .thumb .ph { width: 100%; height: 100%; }
+
+    /* ── Right: Details ── */
+    .product-info { display: flex; flex-direction: column; gap: 0; }
+
+    .product-cat {
+      font-size: 10.5px; font-weight: 600; letter-spacing: 2.5px;
+      text-transform: uppercase; color: var(--gold);
+      margin-bottom: 10px;
+    }
+    .product-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(28px, 3.5vw, 42px);
+      font-weight: 700; color: var(--brown);
+      line-height: 1.15; margin-bottom: 18px;
+    }
+
+    .product-price {
+      display: flex; align-items: baseline; gap: 10px;
+      margin-bottom: 6px;
+    }
+    .p-now  { font-size: 26px; font-weight: 600; color: var(--orange); }
+    .p-was  { font-size: 16px; color: var(--text-3); text-decoration: line-through; }
+    .p-off  { font-size: 12px; font-weight: 600; color: #2D8A40;
+               background: #edf7ef; padding: 3px 8px; border-radius: 20px; }
+
+    .product-divider {
+      height: 1px; background: var(--border);
+      margin: 22px 0;
+    }
+
+    .option-label {
+      font-size: 12px; font-weight: 600; letter-spacing: 1px;
+      text-transform: uppercase; color: var(--text-2);
+      margin-bottom: 10px;
+    }
+
+    /* Size picker */
+    .size-grid {
+      display: flex; flex-wrap: wrap; gap: 8px;
+      margin-bottom: 24px;
+    }
+    .size-btn {
+      padding: 8px 16px; border-radius: 4px;
+      border: 1.5px solid var(--border);
+      background: transparent; color: var(--text-2);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px; cursor: pointer;
+      transition: all var(--t);
+    }
+    .size-btn:hover { border-color: var(--orange); color: var(--orange); }
+    .size-btn.active {
+      border-color: var(--brown); background: var(--brown); color: var(--cream);
+    }
+
+    /* Quantity picker */
+    .qty-row {
+      display: flex; align-items: center; gap: 16px;
+      margin-bottom: 24px;
+    }
+    .qty-control {
+      display: flex; align-items: center;
+      border: 1.5px solid var(--border); border-radius: 4px;
+      overflow: hidden;
+    }
+    .qty-btn {
+      width: 40px; height: 40px;
+      background: transparent; border: none; cursor: pointer;
+      font-size: 16px; color: var(--text-2);
+      transition: background var(--t);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .qty-btn:hover { background: var(--cream-2); }
+    .qty-num {
+      width: 44px; text-align: center;
+      font-size: 15px; font-weight: 500; color: var(--brown);
+      border-left: 1px solid var(--border);
+      border-right: 1px solid var(--border);
+      line-height: 40px;
+    }
+
+    /* Action buttons */
+    .product-actions {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+      margin-bottom: 28px;
+    }
+    .btn-cart {
+      padding: 14px; border-radius: 4px;
+      border: 1.5px solid var(--orange); background: transparent;
+      color: var(--orange); font-family: 'DM Sans', sans-serif;
+      font-size: 13px; font-weight: 600; letter-spacing: 1px;
+      text-transform: uppercase; cursor: pointer;
+      transition: all var(--t);
+    }
+    .btn-cart:hover { background: var(--orange); color: #fff; }
+
+    .btn-buy {
+      padding: 14px; border-radius: 4px;
+      border: 1.5px solid var(--brown); background: var(--brown);
+      color: var(--cream); font-family: 'DM Sans', sans-serif;
+      font-size: 13px; font-weight: 600; letter-spacing: 1px;
+      text-transform: uppercase; cursor: pointer;
+      transition: all var(--t);
+    }
+    .btn-buy:hover { background: var(--orange); border-color: var(--orange); }
+
+    /* Trust perks */
+    .product-perks {
+      display: flex; flex-direction: column; gap: 10px;
+      padding: 18px; background: var(--cream-2);
+      border-radius: 8px; margin-bottom: 28px;
+    }
+    .perk {
+      display: flex; align-items: center; gap: 10px;
+      font-size: 13px; color: var(--text-2);
+    }
+    .perk i { color: var(--gold); width: 16px; text-align: center; }
+
+    /* Description */
+    .product-desc h4 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 18px; font-weight: 600; color: var(--brown);
+      margin-bottom: 10px;
+    }
+    .product-desc p {
+      font-size: 14px; color: var(--text-2); line-height: 1.8;
+    }
+    .product-desc ul {
+      margin-top: 10px; padding-left: 18px;
+      display: flex; flex-direction: column; gap: 5px;
+    }
+    .product-desc ul li {
+      font-size: 13.5px; color: var(--text-2); line-height: 1.6;
+    }
+
+    /* ── Related Products ── */
+    .related {
+      background: var(--cream-2);
+      padding: 60px 40px;
+      border-top: 1px solid var(--border);
+    }
+    .related-inner { max-width: 1440px; margin: 0 auto; }
+    .related h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(28px, 3vw, 38px);
+      font-weight: 700; color: var(--brown);
+      margin-bottom: 6px;
+    }
+    .related p { font-size: 13.5px; color: var(--text-3); margin-bottom: 32px; }
+
+    /* ── Responsive ── */
+    @media (max-width: 900px) {
+      .product-wrap   { grid-template-columns: 1fr; gap: 36px; padding: 32px 20px 60px; }
+      .breadcrumb-bar { padding: 14px 20px; }
+      .related        { padding: 48px 20px; }
+      .product-thumbs { grid-template-columns: repeat(4,1fr); }
+    }
+    @media (max-width: 768px) {
+      .product-name { font-size: 28px; }
+      .p-now        { font-size: 22px; }
+    }
+    @media (max-width: 520px) {
+      .product-actions { grid-template-columns: 1fr; }
+      .size-grid       { gap: 6px; }
+      .related h2      { font-size: 26px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── Navbar ──────────────────────────────────────────────── -->
+<nav class="navbar">
+  <div class="nav-wrap">
+    <div class="nav-logo">
+      <a href="index.html"><img src="assets/images/logo.png" alt="Rang Mahal" /></a>
+    </div>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="catalogue.html" class="nav-link active">Shop</a>
+      <a href="index.html#about" class="nav-link">About</a>
+      <a href="index.html#contact" class="nav-link">Contact</a>
+    </div>
+    <div class="nav-right">
+      <div class="nav-search">
+        <input type="text" placeholder="Search" class="nav-search-input" />
+      </div>
+      <button class="nav-bag" id="navBag">Bag (0)</button>
+      <button class="nav-hamburger" id="menuBtn" aria-label="Menu" onclick="toggleMenu()">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <div class="mobile-menu-inner">
+    <div class="mobile-search-wrap">
+      <i class="fas fa-search"></i>
+      <input type="text" placeholder="Search bangles, jewellery…" />
+    </div>
+    <a href="index.html" class="mobile-nav-link">Home</a>
+    <a href="catalogue.html" class="mobile-nav-link active">Shop</a>
+    <a href="index.html#about" class="mobile-nav-link">About</a>
+    <a href="index.html#contact" class="mobile-nav-link">Contact</a>
+  </div>
+</div>
+
+<!-- ── Breadcrumb ──────────────────────────────────────────── -->
+<div class="breadcrumb-bar">
+  <div class="breadcrumb">
+    <a href="index.html">Home</a>
+    <i class="fas fa-chevron-right"></i>
+    <a href="catalogue.html">Lac Bangles</a>
+    <i class="fas fa-chevron-right"></i>
+    <span>Bridal Lac Set — Scarlet &amp; Gold</span>
+  </div>
+</div>
+
+<!-- ── Product ─────────────────────────────────────────────── -->
+<div class="product-wrap">
+
+  <!-- Left: Images -->
+  <div class="product-images">
+    <div class="product-main-img">
+      <div class="ph ph-red"></div>
+    </div>
+    <div class="product-thumbs">
+      <div class="thumb active"><div class="ph ph-red"></div></div>
+      <div class="thumb"><div class="ph ph-maroon"></div></div>
+      <div class="thumb"><div class="ph ph-gold"></div></div>
+      <div class="thumb"><div class="ph ph-saffron"></div></div>
+    </div>
+  </div>
+
+  <!-- Right: Details -->
+  <div class="product-info">
+
+    <div class="product-cat">Lac Bangles</div>
+    <h1 class="product-name">Bridal Lac Set — Scarlet &amp; Gold</h1>
+
+    <div class="product-price">
+      <span class="p-now">₹549</span>
+      <span class="p-was">₹799</span>
+      <span class="p-off">31% off</span>
+    </div>
+
+    <div class="product-divider"></div>
+
+    <!-- Size -->
+    <div class="option-label">Select Size</div>
+    <div class="size-grid">
+      <button class="size-btn" onclick="selectSize(this)">2/2</button>
+      <button class="size-btn active" onclick="selectSize(this)">2/4</button>
+      <button class="size-btn" onclick="selectSize(this)">2/6</button>
+      <button class="size-btn" onclick="selectSize(this)">2/8</button>
+      <button class="size-btn" onclick="selectSize(this)">2/10</button>
+      <button class="size-btn" onclick="selectSize(this)">2/12</button>
+    </div>
+
+    <!-- Quantity -->
+    <div class="option-label">Quantity</div>
+    <div class="qty-row">
+      <div class="qty-control">
+        <button class="qty-btn" onclick="changeQty(-1)">−</button>
+        <span class="qty-num" id="qty">1</span>
+        <button class="qty-btn" onclick="changeQty(1)">+</button>
+      </div>
+    </div>
+
+    <!-- Buttons -->
+    <div class="product-actions">
+      <button class="btn-cart" onclick="addToCart()">Add to Cart</button>
+      <button class="btn-buy" onclick="window.location.href='checkout.html'">Buy Now</button>
+    </div>
+
+    <!-- Perks -->
+    <div class="product-perks">
+      <div class="perk"><i class="fas fa-truck"></i> Free shipping on orders above ₹999</div>
+      <div class="perk"><i class="fas fa-gift"></i> Beautiful gift packaging available</div>
+      <div class="perk"><i class="fas fa-shield-alt"></i> Secure payment — UPI &amp; Cards</div>
+      <div class="perk"><i class="fas fa-hands"></i> 100% handcrafted by Jaipur artisans</div>
+    </div>
+
+    <!-- Description -->
+    <div class="product-desc">
+      <h4>About this piece</h4>
+      <p>
+        A stunning bridal bangle set handcrafted in pure lac by master artisans of
+        Maniharon ka Rasta, Jaipur. Rich scarlet base with intricate gold embellishments —
+        perfect for weddings and festive celebrations.
+      </p>
+      <ul>
+        <li>Material: Pure natural lac</li>
+        <li>Finish: Hand-painted with gold zardosi detailing</li>
+        <li>Set includes: 6 bangles per set</li>
+        <li>Origin: Jaipur, Rajasthan</li>
+        <li>Care: Keep away from water and perfume</li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+<!-- ── Related Products ────────────────────────────────────── -->
+<section class="related">
+  <div class="related-inner">
+    <h2>You may also like</h2>
+    <p>More handcrafted pieces from our collection</p>
+    <div class="grid-4">
+
+      <div class="card">
+        <div class="card-img">
+          <div class="ph ph-gold"></div>
+          <div class="card-badge badge-new">New</div>
+          <button class="card-wish"><i class="far fa-heart"></i></button>
+        </div>
+        <div class="card-body">
+          <div class="card-sub">Lac Bangles</div>
+          <div class="card-name">Zardosi Set — Gold &amp; Ivory</div>
+          <div class="card-price">
+            <span class="price-now">₹649</span>
+            <span class="price-was">₹950</span>
+          </div>
+        </div>
+        <div class="card-footer"><a href="product.html" class="card-btn" style="display:block;text-align:center;padding:10px;">View Product</a></div>
+      </div>
+
+      <div class="card">
+        <div class="card-img">
+          <div class="ph ph-maroon"></div>
+          <button class="card-wish"><i class="far fa-heart"></i></button>
+        </div>
+        <div class="card-body">
+          <div class="card-sub">Lac Bangles</div>
+          <div class="card-name">Stone Studded Set — Deep Maroon</div>
+          <div class="card-price">
+            <span class="price-now">₹599</span>
+            <span class="price-was">₹899</span>
+          </div>
+        </div>
+        <div class="card-footer"><a href="product.html" class="card-btn" style="display:block;text-align:center;padding:10px;">View Product</a></div>
+      </div>
+
+      <div class="card">
+        <div class="card-img">
+          <div class="ph ph-pink"></div>
+          <button class="card-wish"><i class="far fa-heart"></i></button>
+        </div>
+        <div class="card-body">
+          <div class="card-sub">Lac Bangles</div>
+          <div class="card-name">Gota Patti Set — Blush Pink</div>
+          <div class="card-price">
+            <span class="price-now">₹429</span>
+            <span class="price-was">₹649</span>
+          </div>
+        </div>
+        <div class="card-footer"><a href="product.html" class="card-btn" style="display:block;text-align:center;padding:10px;">View Product</a></div>
+      </div>
+
+      <div class="card">
+        <div class="card-img">
+          <div class="ph ph-purple"></div>
+          <div class="card-badge badge-sale">Sale</div>
+          <button class="card-wish"><i class="far fa-heart"></i></button>
+        </div>
+        <div class="card-body">
+          <div class="card-sub">Lac Bangles</div>
+          <div class="card-name">Kundan Set — Deep Violet</div>
+          <div class="card-price">
+            <span class="price-now">₹349</span>
+            <span class="price-was">₹549</span>
+          </div>
+        </div>
+        <div class="card-footer"><a href="product.html" class="card-btn" style="display:block;text-align:center;padding:10px;">View Product</a></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── Footer ──────────────────────────────────────────────── -->
+<footer class="footer">
+  <div class="footer-grid">
+    <div>
+      <div class="footer-logo"><img src="assets/images/logo.png" alt="Rang Mahal" /></div>
+      <p class="footer-desc">Handcrafted lac bangles &amp; Jaipur artifacts, delivered to your doorstep since 2026.</p>
+      <div class="footer-socials">
+        <a href="#" class="social-btn"><i class="fab fa-instagram"></i></a>
+        <a href="#" class="social-btn"><i class="fab fa-facebook-f"></i></a>
+        <a href="#" class="social-btn"><i class="fab fa-whatsapp"></i></a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h5>Quick Links</h5>
+      <ul class="footer-list">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="catalogue.html">Shop Bangles</a></li>
+        <li><a href="index.html#about">About Us</a></li>
+        <li><a href="#">Shipping Policy</a></li>
+      </ul>
+    </div>
+    <div class="footer-contact">
+      <h5>Get in Touch</h5>
+      <p><i class="fas fa-location-dot" style="color:var(--gold);margin-right:8px;"></i>Johri Bazaar, Jaipur, Rajasthan</p>
+      <p style="margin-top:8px;"><i class="fas fa-envelope" style="color:var(--gold);margin-right:8px;"></i><a href="mailto:hello@rangmahal.in" style="color:var(--gold);">hello@rangmahal.in</a></p>
+      <p style="margin-top:8px;"><i class="fas fa-phone" style="color:var(--gold);margin-right:8px;"></i>+91 98765 43210</p>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 Rang Mahal · <span class="hindi">जयपुर से, प्यार से</span></span>
+    <span>Privacy Policy &nbsp;·&nbsp; Terms of Use</span>
+  </div>
+</footer>
+
+<script>
+  let bagCount = 0;
+  let qty = 1;
+
+  function changeQty(delta) {
+    qty = Math.max(1, qty + delta);
+    document.getElementById('qty').textContent = qty;
+  }
+
+  function selectSize(btn) {
+    document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+
+  function addToCart() {
+    bagCount += qty;
+    document.getElementById('navBag').textContent = 'Bag (' + bagCount + ')';
+    const btn = document.querySelector('.btn-cart');
+    btn.textContent = '✓ Added to Cart';
+    btn.style.background = '#2D8A40';
+    btn.style.color = '#fff';
+    btn.style.borderColor = '#2D8A40';
+    setTimeout(() => {
+      btn.textContent = 'Add to Cart';
+      btn.style.cssText = '';
+    }, 1800);
+  }
+
+  function toggleMenu() {
+    document.getElementById('mobileMenu').classList.toggle('open');
+    document.getElementById('menuBtn').classList.toggle('open');
+  }
+  document.addEventListener('click', function(e) {
+    if (!e.target.closest('.navbar') && !e.target.closest('.mobile-menu')) {
+      document.getElementById('mobileMenu').classList.remove('open');
+      document.getElementById('menuBtn').classList.remove('open');
+    }
+  });
+</script>
+</body>
+</html>
