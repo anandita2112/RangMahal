@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(Move-Item \"e:\\\\Rang Mahal\\\\styles.css\" \"e:\\\\Rang Mahal\\\\assets\\\\css\\\\styles.css\" -Force)"
+    ]
+  }
+}

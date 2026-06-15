@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lac Bangles — Rang Mahal Jaipur</title>
+  <link rel="stylesheet" href="assets/css/styles.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+
+    /* ═══════════════════════════════════════════
+       PAGE HEADER
+    ═══════════════════════════════════════════ */
+    .page-head {
+      background: var(--cream-2);
+      border-bottom: 1px solid var(--border);
+      padding: 40px 32px 36px;
+    }
+    .page-head-inner {
+      max-width: 1280px; margin: 0 auto;
+    }
+    .breadcrumb {
+      font-size: 12.5px; color: var(--text-3);
+      margin-bottom: 10px; display: flex; align-items: center; gap: 8px;
+    }
+    .breadcrumb a { color: var(--text-3); transition: color var(--t); }
+    .breadcrumb a:hover { color: var(--orange); }
+    .breadcrumb i { font-size: 9px; }
+    .page-head h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(28px, 4vw, 44px);
+      font-weight: 700; color: var(--brown);
+    }
+    .page-head p { font-size: 14px; color: var(--text-3); margin-top: 6px; }
+
+    /* ═══════════════════════════════════════════
+       FILTER BAR
+    ═══════════════════════════════════════════ */
+    .filter-bar {
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      padding: 0 32px;
+      position: sticky; top: 104px; z-index: 50;
+    }
+    .filter-bar-inner {
+      max-width: 1280px; margin: 0 auto;
+      display: flex; align-items: center;
+      gap: 0; overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .filter-bar-inner::-webkit-scrollbar { display: none; }
+
+    .filter-group-label {
+      font-size: 11.5px; font-weight: 600; letter-spacing: 1px;
+      text-transform: uppercase; color: var(--text-3);
+      padding: 16px 16px 16px 0;
+      white-space: nowrap; flex-shrink: 0;
+    }
+
+    .filter-chips {
+      display: flex; gap: 8px; padding: 12px 16px 12px 0;
+      flex-shrink: 0;
+    }
+    .chip {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 7px 16px; border-radius: 30px;
+      font-size: 12.5px; font-weight: 500;
+      border: 1.5px solid var(--border);
+      background: var(--cream); color: var(--text-2);
+      cursor: pointer; transition: all var(--t);
+      white-space: nowrap;
+    }
+    .chip.active, .chip:hover {
+      background: var(--orange); color: #fff; border-color: var(--orange);
+    }
+    .chip.size-chip { padding: 7px 12px; }
+
+    /* Color chips */
+    .color-chip {
+      width: 28px; height: 28px; border-radius: 50%;
+      border: 2.5px solid var(--border);
+      cursor: pointer; transition: all var(--t);
+      flex-shrink: 0;
+      position: relative;
+    }
+    .color-chip:hover,
+    .color-chip.active {
+      border-color: var(--brown);
+      transform: scale(1.15);
+    }
+    .color-chip.active::after {
+      content: '✓';
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 10px; color: #fff;
+      text-shadow: 0 0 4px rgba(0,0,0,0.5);
+    }
+
+    /* Separator between filter groups */
+    .filter-sep {
+      width: 1px; height: 28px; background: var(--border);
+      flex-shrink: 0; margin: 0 14px;
+    }
+
+    /* Sort (pushed to the right) */
+    .filter-spacer { flex: 1; }
+    .sort-wrap { display: flex; align-items: center; gap: 8px; padding: 12px 0; white-space: nowrap; }
+    .sort-label { font-size: 11.5px; color: var(--text-3); letter-spacing: 0.5px; }
+    .sort-select {
+      padding: 7px 30px 7px 12px; border-radius: 4px;
+      border: 1.5px solid var(--border);
+      background: var(--cream) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%237A4A2A'/%3E%3C/svg%3E") no-repeat right 10px center;
+      appearance: none; font-family: 'DM Sans', sans-serif;
+      font-size: 12.5px; color: var(--text-2);
+      cursor: pointer; outline: none;
+    }
+    .sort-select:focus { border-color: var(--orange); }
+
+    /* Results count + active filters */
+    .results-bar {
+      max-width: 1280px; margin: 0 auto;
+      padding: 20px 32px 0;
+      display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+    }
+    .results-count { font-size: 13px; color: var(--text-3); }
+    .results-count strong { color: var(--brown); }
+
+    .active-tag {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: var(--cream-2); border: 1px solid var(--border);
+      padding: 4px 12px; border-radius: 20px;
+      font-size: 12px; color: var(--text-2);
+    }
+    .active-tag button {
+      background: none; border: none; cursor: pointer;
+      color: var(--text-3); font-size: 14px; line-height: 1;
+      padding: 0; transition: color var(--t);
+    }
+    .active-tag button:hover { color: var(--orange); }
+
+    /* ═══════════════════════════════════════════
+       PRODUCTS GRID
+    ═══════════════════════════════════════════ */
+    .shop-section { padding: 28px 32px 72px; }
+    .shop-inner   { max-width: 1280px; margin: 0 auto; }
+
+    /* ═══════════════════════════════════════════
+       PAGINATION
+    ═══════════════════════════════════════════ */
+    .pagination {
+      display: flex; align-items: center; justify-content: center;
+      gap: 6px; margin-top: 52px;
+    }
+    .pg-btn {
+      min-width: 38px; height: 38px; border-radius: 4px;
+      background: var(--white); border: 1.5px solid var(--border);
+      font-family: 'DM Sans', sans-serif; font-size: 13.5px;
+      color: var(--text-2); cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      padding: 0 8px; transition: all var(--t);
+    }
+    .pg-btn:hover      { border-color: var(--orange); color: var(--orange); }
+    .pg-btn.active     { background: var(--orange); color: #fff; border-color: var(--orange); }
+    .pg-btn:disabled   { opacity: 0.35; cursor: default; pointer-events: none; }
+    .pg-ellipsis       { color: var(--text-3); padding: 0 4px; font-size: 14px; }
+
+    /* ═══════════════════════════════════════════
+       EMPTY STATE (future use)
+    ═══════════════════════════════════════════ */
+    .empty-state {
+      text-align: center; padding: 80px 20px;
+      display: none;
+    }
+    .empty-state i { font-size: 48px; color: var(--border); margin-bottom: 20px; }
+    .empty-state h3 { font-family: 'Cormorant Garamond', serif; font-size: 26px; color: var(--brown); margin-bottom: 10px; }
+    .empty-state p  { color: var(--text-3); font-size: 14px; }
+
+    /* ═══════════════════════════════════════════
+       RESPONSIVE
+    ═══════════════════════════════════════════ */
+    @media (max-width: 768px) {
+      .filter-bar { padding: 0 18px; }
+      .shop-section { padding: 20px 18px 52px; }
+      .results-bar  { padding: 16px 18px 0; }
+      .page-head    { padding: 28px 18px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── Announcement Bar ─────────────────────────────────── -->
+<div class="top-bar">
+  <span><span class="dot">◆</span> Free shipping above ₹999</span>
+  <span><span class="dot">◆</span> Cash on Delivery available</span>
+  <span><span class="dot">◆</span> Handcrafted in Jaipur</span>
+</div>
+
+<!-- ── Navbar ──────────────────────────────────────────── -->
+<nav class="navbar">
+  <div class="nav-wrap">
+    <div class="nav-links">
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="catalogue.html" class="nav-link active">Shop</a>
+    </div>
+
+    <div class="nav-logo">
+      <a href="index.html"><img src="assets/images/logo.png" alt="Rang Mahal" /></a>
+    </div>
+
+    <div class="nav-links nav-links-right">
+      <a href="index.html#about" class="nav-link">About</a>
+      <a href="index.html#contact" class="nav-link">Contact</a>
+      <button class="nav-icon" title="Search"><i class="fas fa-search"></i></button>
+      <button class="nav-icon" title="Cart">
+        <i class="fas fa-shopping-bag"></i>
+        <span class="cart-count" id="cartCount">0</span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- ── Page Header ──────────────────────────────────────── -->
+<div class="page-head">
+  <div class="page-head-inner">
+    <div class="breadcrumb">
+      <a href="index.html">Home</a>
+      <i class="fas fa-chevron-right"></i>
+      <span>Lac Bangles</span>
+    </div>
+    <h1>Lac Bangles</h1>
+    <p>100+ handcrafted designs · pure natural lac · made by Jaipur artisans</p>
+  </div>
+</div>
+
+<!-- ── Filter Bar ───────────────────────────────────────── -->
+<div class="filter-bar">
+  <div class="filter-bar-inner">
+
+    <!-- Color -->
+    <span class="filter-group-label">Colour</span>
+    <div class="filter-chips" id="colorChips">
+      <div class="color-chip active" style="background:#C0421A;" title="Red" onclick="toggleChip(this,'color')"></div>
+      <div class="color-chip"       style="background:#D4922A;" title="Gold" onclick="toggleChip(this,'color')"></div>
+      <div class="color-chip"       style="background:#1A5AB0;" title="Blue" onclick="toggleChip(this,'color')"></div>
+      <div class="color-chip"       style="background:#2E8B3A;" title="Green" onclick="toggleChip(this,'color')"></div>
+      <div class="color-chip"       style="background:#7A2AA0;" title="Purple" onclick="toggleChip(this,'color')"></div>
+      <div class="color-chip"       style="background:#B02858;" title="Pink" onclick="toggleChip(this,'color')"></div>
+      <div class="color-chip"       style="background:#186858;" title="Teal" onclick="toggleChip(this,'color')"></div>
+      <div class="color-chip"       style="background:#3D1E0C;" title="Brown" onclick="toggleChip(this,'color')"></div>
+      <div class="color-chip"       style="background:#F5F0E8;border-color:#C8A870;" title="Ivory" onclick="toggleChip(this,'color')"></div>
+    </div>
+
+    <div class="filter-sep"></div>
+
+    <!-- Size -->
+    <span class="filter-group-label">Size</span>
+    <div class="filter-chips" id="sizeChips">
+      <span class="chip size-chip" onclick="toggleChip(this,'size')">2/2</span>
+      <span class="chip size-chip active" onclick="toggleChip(this,'size')">2/4</span>
+      <span class="chip size-chip" onclick="toggleChip(this,'size')">2/6</span>
+      <span class="chip size-chip" onclick="toggleChip(this,'size')">2/8</span>
+      <span class="chip size-chip" onclick="toggleChip(this,'size')">2/10</span>
+      <span class="chip size-chip" onclick="toggleChip(this,'size')">2/12</span>
+    </div>
+
+    <div class="filter-sep"></div>
+
+    <!-- Style -->
+    <span class="filter-group-label">Style</span>
+    <div class="filter-chips">
+      <span class="chip active" onclick="toggleChip(this,'style')">All</span>
+      <span class="chip" onclick="toggleChip(this,'style')">Bridal</span>
+      <span class="chip" onclick="toggleChip(this,'style')">Festive</span>
+      <span class="chip" onclick="toggleChip(this,'style')">Casual</span>
+    </div>
+
+    <div class="filter-spacer"></div>
+
+    <!-- Sort -->
+    <div class="sort-wrap">
+      <span class="sort-label">Sort</span>
+      <select class="sort-select" id="sortSelect">
+        <option>Most Popular</option>
+        <option>Price: Low to High</option>
+        <option>Price: High to Low</option>
+        <option>Newest First</option>
+        <option>Best Rated</option>
+      </select>
+    </div>
+
+  </div>
+</div>
+
+<!-- ── Results count + active filter tags ──────────────── -->
+<div class="results-bar" id="resultsBar">
+  <span class="results-count">Showing <strong>1–12</strong> of <strong>100</strong> bangles</span>
+  <span class="active-tag">Red <button onclick="this.parentElement.remove()">×</button></span>
+  <span class="active-tag">Size 2/4 <button onclick="this.parentElement.remove()">×</button></span>
+</div>
+
+<!-- ── Products Grid ────────────────────────────────────── -->
+<div class="shop-section">
+  <div class="shop-inner">
+    <div class="grid-4" id="productsGrid">
+
+      <!-- 1 -->
+      <div class="card">
+        <div class="card-img">
+          <div class="ph ph-red">💫</div>
+          <div class="card-badge badge-hot">Bestseller</div>
+          <button class="card-wish"><i class="far fa-heart"></i></button>
+        </div>
+        <div class="card-body">
+          <div class="card-sub">Lac Bangles</div>
+          <div class="card-name">Bridal Lac Set — Scarlet &amp; Gold</div>
+          <div class="card-price">
+            <span class="price-now">₹549</span>
+            <span class="price-was">₹799</span>
+            <span class="price-off">31% off</span>
+          </div>
+        </div>
+        <div class="card-footer"><button class="card-btn" onclick="addCart(this)">Add to Cart</button></div>
+      </div>
+
+      <!-- 2 -->
+      <div class="card">
+        <div class="card-img">
+          <div class="ph ph-blue">💙</div>
+          <button class="card-wish"><i class="far fa-heart"></i></button>
+        </div>
+        <div class="card-body">
+          <div class="card-sub">Lac Bangles</div>
+          <div class="card-name">Meenakari Set — Royal Blue</div>
+          <div class="card-price">
+            <span class="price-now">₹399</span>
+            <span class="price-was">₹599</span>
+            <span class="price-off">33% off</span>
+          </div>
+        </div>
+        <div class="card-footer"><button class="card-btn" onclick="addCart(this)">Add to Cart</button></div>
+      </div>
+
+      <!-- 3 -->
+      <div class="card">
+        <div class="card-img">
+          <div class="ph ph-gold">✨</div>
+          <div class="card-badge badge-new">New</div>
+          <button class="card-wish"><i class="far fa-heart"></i></button>
+        </div>
+        <div class="card-body">
+          <div class="card-sub">Lac Bangles</div>
+          <div class="card-name">Zardosi Set — Gold &amp; Ivory</div>
+          <div class="card-price">
+            <span class="price-now">₹649</span>
+            <span class="price-was">₹950</span>
+            <span class="price-off">32% off</span>
+          </div>
+        </div>
+        <div class="card-footer"><button class="card-btn" onclick="addCart(this)">Add to Cart</button></div>
+      </div>
+
+      <!-- 4 -->
+      <div class="card">
+        <div class="card-img">
+          <div class="ph ph-green">💚</div>
+          <button class="card-wish"><i class="far fa-heart"></i></button>
+        </div>
+        <div class="card-body">
+          <div class="card-sub">Lac Bangles</div>
+          <div class="card-name">Floral Set — Emerald &amp; Gold</div>
+          <div class="card-price">
+            <span class="price-now">₹479</span>
+            <span class="price-was">₹699</span>
+            <span class="price-off">31% off</span>
+          </div>
+        </div>
+        <div class="card-footer"><button class="card-btn" onclick="addCart(this)">Add to Cart</button></div>
+      </div>
+
+      <!-- 5 -->
+      <div class="card">
+        <div class="card-img">
+          <div class="ph ph-purple">💜</div>
+          <div class="card-badge badge-sale">Sale</div>
+          <button class="card-wish"><i class="far fa-heart"></i></button>
+        </div>
+        <div class="card-body">
+          <div class="card-sub">Lac Bangles</div>
+          <div class="card-name">Kundan Set — Deep Violet</div>
+          <div class="card-price">
+            <span class="price-now">₹349</span>
+            <span class="price-was">₹549</span>
+            <span class="price-off">36% off</span>
+          </div>
+        </div>
+        <div class="card-footer"><button class="card-btn" onclick="addCart(this)">Add to Cart</button></div>
+      </div>
+
+      <!-- 6 -->
+      <div class="card">
+        <div class="card-img">
+          <div class="ph ph-pink">🌸</div>
+          <button class="card-wish"><i class="far fa-heart"></i></button>
+        </div>
+        <div class="card-body">
+          <div class="card-sub">Lac Bangles</div>
+          <div class="card-name">Gota Patti Set — Blush Pink</div>
+          <div class="card-price">
+            <span class="price-now">₹429</span>
+            <span class="price-was">₹649</span>
+            <span class="price-off">34% off</span>
+          </div>
+        </div>
+        <div class="card-footer"><button class="card-btn" onclick="addCart(this)">Add to Cart</button></div>
+      </div>
+
+      <!-- 7 -->
+      <div class="card">
+        <div class="card-img">
+          <div class="ph ph-teal">🌊</div>
+          <div class="card-badge badge-new">New</div>
+          <button class="card-wish"><i class="far fa-heart"></i></button>
+        </div>
+        <div class="card-body">
+          <div class="card-sub">Lac Bangles</div>
+          <div class="card-name">Mirror Work Set — Teal &amp; Silver</div>
+          <div class="card-price">
+            <span class="price-now">₹529</span>
+            <span class="price-was">₹799</span>
+            <span class="price-off">34% off</span>
+          </div>
+        </div>
+        <div class="card-footer"><button class="card-btn" onclick="addCart(this)">Add to Cart</button></div>
+      </div>
+
+      <!-- 8 -->
+      <div class="card">
+        <div class="card-img">
+          <div class="ph ph-maroon">❤️</div>
+          <button class="card-wish"><i class="far fa-heart"></i></button>
+        </div>
+        <div class="card-body">
+          <div class="card-sub">Lac Bangles</div>
+          <div class="card-name">Stone Studded Set — Deep Maroon</div>
+          <div class="card-price">
+            <span class="price-now">₹599</span>
+            <span class="price-was">₹899</span>
+            <span class="price-off">33% off</span>
+          </div>
+        </div>
+        <div class="card-footer"><button class="card-btn" onclick="addCart(this)">Add to Cart</button></div>
+      </div>
+
+      <!-- 9 -->
+      <div class="card">
+        <div class="card-img">
+          <div class="ph ph-saffron">🧡</div>
+          <button class="card-wish"><i class="far fa-heart"></i></button>
+        </div>
+        <div class="card-body">
+          <div class="card-sub">Lac Bangles</div>
+          <div class="card-name">Print Work Set — Saffron</div>
+          <div class="card-price">
+            <span class="price-now">₹379</span>
+            <span class="price-was">₹579</span>
+            <span class="price-off">35% off</span>
+          </div>
+        </div>
+        <div class="card-footer"><button class="card-btn" onclick="addCart(this)">Add to Cart</button></div>
+      </div>
+
+      <!-- 10 -->
+      <div class="card">
+        <div class="card-img">
+          <div class="ph ph-ivory">🤍</div>
+          <div class="card-badge badge-new">New</div>
+          <button class="card-wish"><i class="far fa-heart"></i></button>
+        </div>
+        <div class="card-body">
+          <div class="card-sub">Lac Bangles</div>
+          <div class="card-name">Classic Set — Pearl Ivory</div>
+          <div class="card-price">
+            <span class="price-now">₹499</span>
+            <span class="price-was">₹749</span>
+            <span class="price-off">33% off</span>
+          </div>
+        </div>
+        <div class="card-footer"><button class="card-btn" onclick="addCart(this)">Add to Cart</button></div>
+      </div>
+
+      <!-- 11 -->
+      <div class="card">
+        <div class="card-img">
+          <div class="ph ph-navy">💙</div>
+          <button class="card-wish"><i class="far fa-heart"></i></button>
+        </div>
+        <div class="card-body">
+          <div class="card-sub">Lac Bangles</div>
+          <div class="card-name">Thread Work Set — Navy &amp; Gold</div>
+          <div class="card-price">
+            <span class="price-now">₹459</span>
+            <span class="price-was">₹699</span>
+            <span class="price-off">34% off</span>
+          </div>
+        </div>
+        <div class="card-footer"><button class="card-btn" onclick="addCart(this)">Add to Cart</button></div>
+      </div>
+
+      <!-- 12 -->
+      <div class="card">
+        <div class="card-img">
+          <div class="ph ph-rose">🌹</div>
+          <div class="card-badge badge-sale">Sale</div>
+          <button class="card-wish"><i class="far fa-heart"></i></button>
+        </div>
+        <div class="card-body">
+          <div class="card-sub">Lac Bangles</div>
+          <div class="card-name">Festive Set — Rose &amp; Silver</div>
+          <div class="card-price">
+            <span class="price-now">₹299</span>
+            <span class="price-was">₹499</span>
+            <span class="price-off">40% off</span>
+          </div>
+        </div>
+        <div class="card-footer"><button class="card-btn" onclick="addCart(this)">Add to Cart</button></div>
+      </div>
+
+    </div><!-- /grid -->
+
+    <!-- Pagination -->
+    <div class="pagination">
+      <button class="pg-btn" disabled><i class="fas fa-chevron-left"></i></button>
+      <button class="pg-btn active">1</button>
+      <button class="pg-btn" onclick="goPage(this)">2</button>
+      <button class="pg-btn" onclick="goPage(this)">3</button>
+      <button class="pg-btn" onclick="goPage(this)">4</button>
+      <span class="pg-ellipsis">…</span>
+      <button class="pg-btn" onclick="goPage(this)">9</button>
+      <button class="pg-btn" onclick="goPage(this)"><i class="fas fa-chevron-right"></i></button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ── Footer ───────────────────────────────────────────── -->
+<footer class="footer">
+  <div class="footer-grid">
+    <div>
+      <div class="footer-logo"><img src="assets/images/logo.png" alt="Rang Mahal" /></div>
+      <p class="footer-desc">
+        Handcrafted lac bangles &amp; Jaipur artifacts, delivered to your doorstep since 2026.
+      </p>
+      <div class="footer-socials">
+        <a href="#" class="social-btn"><i class="fab fa-instagram"></i></a>
+        <a href="#" class="social-btn"><i class="fab fa-facebook-f"></i></a>
+        <a href="#" class="social-btn"><i class="fab fa-whatsapp"></i></a>
+        <a href="#" class="social-btn"><i class="fab fa-pinterest-p"></i></a>
+      </div>
+    </div>
+
+    <div class="footer-col">
+      <h5>Quick Links</h5>
+      <ul class="footer-list">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="catalogue.html">Shop Bangles</a></li>
+        <li><a href="index.html#about">About Us</a></li>
+        <li><a href="#">Shipping Policy</a></li>
+        <li><a href="#">Returns</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-contact">
+      <h5>Get in Touch</h5>
+      <p><i class="fas fa-location-dot" style="color:var(--gold);margin-right:8px;"></i>Johri Bazaar, Jaipur, Rajasthan</p>
+      <p style="margin-top:8px;"><i class="fas fa-envelope" style="color:var(--gold);margin-right:8px;"></i><a href="mailto:hello@rangmahal.in" style="color:var(--gold);">hello@rangmahal.in</a></p>
+      <p style="margin-top:8px;"><i class="fas fa-phone" style="color:var(--gold);margin-right:8px;"></i>+91 98765 43210</p>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <span>© 2026 Rang Mahal. All rights reserved. Made with love in Jaipur.</span>
+    <span>Privacy Policy &nbsp;·&nbsp; Terms of Use</span>
+  </div>
+</footer>
+
+<script>
+  // Cart
+  let cartCount = 0;
+  function addCart(btn) {
+    cartCount++;
+    document.getElementById('cartCount').textContent = cartCount;
+    btn.textContent = '✓ Added';
+    btn.style.background = '#2D8A40';
+    btn.style.color = '#fff';
+    btn.style.borderColor = '#2D8A40';
+    setTimeout(() => {
+      btn.textContent = 'Add to Cart';
+      btn.style.cssText = '';
+    }, 1600);
+  }
+
+  // Filter chip toggle (allow multi-select for color/size, single for style)
+  function toggleChip(el, group) {
+    if (group === 'style') {
+      el.closest('.filter-chips').querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+      el.classList.add('active');
+    } else {
+      el.classList.toggle('active');
+    }
+  }
+
+  // Pagination
+  function goPage(btn) {
+    document.querySelectorAll('.pg-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+</script>
+</body>
+</html>
