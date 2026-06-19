@@ -39,6 +39,7 @@
   <div class="sidebar-brand"><img src="../assets/images/logo.png" alt="Rang Mahal" /><div class="sidebar-brand-text"><h2>Rang Mahal</h2><span>Admin</span></div></div>
   <nav class="sidebar-nav">
     <a class="nav-item" href="dashboard.html"><i class="fas fa-th-large"></i> Dashboard</a>
+    <a class="nav-item" href="homepage.html"><i class="fas fa-home"></i> Homepage</a>
     <a class="nav-item" href="orders.html"><i class="fas fa-box"></i> Orders</a>
     <a class="nav-item active" href="products.html"><i class="fas fa-tags"></i> Products</a>
     <a class="nav-item" href="customers.html"><i class="fas fa-users"></i> Customers</a>
@@ -144,6 +145,26 @@
         <label>Stock Quantity</label>
         <input type="number" class="form-input" id="fStock" placeholder="24" />
       </div>
+      <div class="form-group">
+        <label><i class="fas fa-image" style="color:var(--orange);margin-right:4px;"></i> Main Image URL</label>
+        <input type="url" class="form-input" id="fImg1" placeholder="https://images.pexels.com/..." oninput="previewImg(this.value)" />
+        <p style="font-size:11px;color:var(--text-3);margin-top:4px;">Paste image URL from Pexels, Unsplash, or any link</p>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Image 2 URL</label>
+          <input type="url" class="form-input" id="fImg2" placeholder="Optional" />
+        </div>
+        <div class="form-group">
+          <label>Image 3 URL</label>
+          <input type="url" class="form-input" id="fImg3" placeholder="Optional" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Image 4 URL</label>
+        <input type="url" class="form-input" id="fImg4" placeholder="Optional" />
+      </div>
+      <img id="imgPreview" style="width:100%;max-height:150px;object-fit:cover;border-radius:8px;border:1px solid var(--border);margin-top:6px;display:none;" />
     </div>
     <div class="modal-footer">
       <button class="btn-secondary" onclick="closeModal()">Cancel</button>
@@ -174,7 +195,7 @@
       <tr>
         <td>
           <div class="product-cell">
-            <div class="product-thumb"><div class="ph ${p.color || 'ph-gold'}"></div></div>
+            <div class="product-thumb">${p.images && p.images[0] ? '<img src="'+p.images[0]+'" style="width:100%;height:100%;object-fit:cover;">' : '<div class="ph '+(p.color||'ph-gold')+'"></div>'}</div>
             <div><div class="product-cell-name">${p.name}</div><div class="product-cell-cat">${p.category}</div></div>
           </div>
         </td>
@@ -196,9 +217,15 @@
     document.getElementById('modal').classList.add('show');
     document.getElementById('modalTitle').textContent = id ? 'Edit Product' : 'Add Product';
     document.getElementById('editId').value = id || '';
-    if (!id) { ['fName','fPrice','fMrp','fStock'].forEach(f => document.getElementById(f).value = ''); document.getElementById('fCategory').value = 'Lac Bangles'; document.getElementById('fStatus').value = 'active'; }
+    if (!id) { ['fName','fPrice','fMrp','fStock','fImg1','fImg2','fImg3','fImg4'].forEach(f => document.getElementById(f).value = ''); document.getElementById('fCategory').value = 'Lac Bangles'; document.getElementById('fStatus').value = 'active'; document.getElementById('imgPreview').style.display='none'; }
   }
   function closeModal() { document.getElementById('modal').classList.remove('show'); }
+
+  function previewImg(url) {
+    var el = document.getElementById('imgPreview');
+    if (url && url.startsWith('http')) { el.src = url; el.style.display = 'block'; }
+    else el.style.display = 'none';
+  }
 
   function editProduct(id) {
     const p = DB.products().find(x => x.id === id);
@@ -210,6 +237,12 @@
     document.getElementById('fMrp').value = p.mrp;
     document.getElementById('fStock').value = p.stock;
     document.getElementById('fStatus').value = p.status;
+    var imgs = p.images || [];
+    document.getElementById('fImg1').value = imgs[0] || '';
+    document.getElementById('fImg2').value = imgs[1] || '';
+    document.getElementById('fImg3').value = imgs[2] || '';
+    document.getElementById('fImg4').value = imgs[3] || '';
+    previewImg(imgs[0] || '');
   }
 
   function saveProduct() {
@@ -218,6 +251,8 @@
     const mrp = parseInt(document.getElementById('fMrp').value);
     const stock = parseInt(document.getElementById('fStock').value);
     if (!name || !price) { alert('Please fill in product name and price.'); return; }
+
+    var images = [document.getElementById('fImg1').value, document.getElementById('fImg2').value, document.getElementById('fImg3').value, document.getElementById('fImg4').value].filter(u => u.trim());
 
     const products = DB.products();
     const editId = parseInt(document.getElementById('editId').value);
@@ -231,6 +266,7 @@
         products[idx].mrp = mrp || price;
         products[idx].stock = stock || 0;
         products[idx].status = document.getElementById('fStatus').value;
+        products[idx].images = images;
       }
       showToast('Product updated successfully');
     } else {
@@ -239,7 +275,8 @@
         name, category: document.getElementById('fCategory').value,
         price, mrp: mrp || price, stock: stock || 0,
         status: document.getElementById('fStatus').value,
-        color: COLORS[Math.floor(Math.random() * COLORS.length)]
+        color: COLORS[Math.floor(Math.random() * COLORS.length)],
+        images: images
       });
       showToast('Product added successfully');
     }

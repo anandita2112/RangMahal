@@ -370,14 +370,14 @@
     <div class="hero-text">
       <div class="hero-eyebrow">Handcrafted in Jaipur · Since 2026</div>
 
-      <h1 class="hero-h1">
+      <h1 class="hero-h1" id="hero-title">
         Lac Bangles<br />from the<br /><em>Heart of Jaipur</em>
       </h1>
 
       <!-- Hindi — one line only -->
-      <div class="hero-hindi">जयपुर की असली पहचान</div>
+      <div class="hero-hindi" id="hero-hindi">जयपुर की असली पहचान</div>
 
-      <p class="hero-desc">
+      <p class="hero-desc" id="hero-desc">
         Pure lac bangles crafted in the historic lanes of
         <strong>Maniharon ka Rasta</strong> by artisan families who have
         perfected this craft over generations.
@@ -410,6 +410,7 @@
     <div class="hero-visual">
       <div class="arch-frame">
         <img
+          id="hero-image"
           src="https://images.pexels.com/photos/36406040/pexels-photo-36406040.jpeg?auto=compress&cs=tinysrgb&w=400&h=380&fit=crop"
           alt="Lac Bangles — Rang Mahal Jaipur"
           class="arch-img"
@@ -477,20 +478,20 @@
 
     <div class="about-text">
       <div class="about-tag">Our Story</div>
-      <h2 class="about-h2">Born in the Lanes<br />of Jaipur</h2>
+      <h2 class="about-h2" id="about-title">Born in the Lanes<br />of Jaipur</h2>
 
-      <p class="about-p">
+      <p class="about-p" id="about-p1">
         Rang Mahal was born from a deep love for Jaipur's age-old craft traditions.
         We work directly with artisan families on <strong>Maniharon ka Rasta</strong> —
         the legendary bangle lane in the heart of the Pink City.
       </p>
 
       <div class="about-quote">
-        <p>"Every bangle carries the memory of the hands that made it."</p>
-        <small>— Artisans of Maniharon ka Rasta, Jaipur</small>
+        <p id="about-quote">"Every bangle carries the memory of the hands that made it."</p>
+        <small id="about-quote-author">— Artisans of Maniharon ka Rasta, Jaipur</small>
       </div>
 
-      <p class="about-p">
+      <p class="about-p" id="about-p2">
         Each piece is shaped from pure natural lac, hand-painted with mineral colors,
         and finished with intricate stone or meenakari work. No two are exactly alike —
         that is the beauty of something truly handcrafted.
@@ -625,7 +626,51 @@
   document.addEventListener('click', function(e) {
     if (!e.target.closest('.navbar') && !e.target.closest('.mobile-menu')) closeMenu();
   });
+
+  // ── Sync admin data from localStorage ──
+  (function(){
+    try {
+      var el, d;
+      // Settings → footer
+      d = localStorage.getItem('rm_settings');
+      if(d) {
+        var s = JSON.parse(d);
+        el = document.getElementById('footer-address'); if(el && s.address) el.textContent = s.address;
+        el = document.getElementById('footer-email');   if(el && s.email){ el.textContent = s.email; el.href = 'mailto:' + s.email; }
+        el = document.getElementById('footer-phone');   if(el && s.phone) el.textContent = s.phone;
+        el = document.getElementById('social-instagram'); if(el && s.instagram) el.href = s.instagram;
+        el = document.getElementById('social-facebook');  if(el && s.facebook) el.href = s.facebook;
+        el = document.getElementById('social-whatsapp');  if(el && s.whatsapp){ el.href = 'https://wa.me/' + s.whatsapp.replace(/[^0-9]/g,''); }
+        el = document.getElementById('free-ship-text');   if(el && s.freeShippingMin) el.textContent = 'Free shipping on orders above ₹' + s.freeShippingMin;
+      }
+      // Homepage content → hero + about
+      d = localStorage.getItem('rm_homepage');
+      if(d) {
+        var h = JSON.parse(d);
+        el = document.getElementById('hero-title');  if(el && h.heroTitle) el.innerHTML = h.heroTitle;
+        el = document.getElementById('hero-hindi');  if(el && h.heroHindi) el.textContent = h.heroHindi;
+        el = document.getElementById('hero-desc');   if(el && h.heroDesc) el.textContent = h.heroDesc;
+        el = document.getElementById('hero-image');  if(el && h.heroImage) el.src = h.heroImage;
+        el = document.getElementById('about-title'); if(el && h.aboutTitle) el.textContent = h.aboutTitle;
+        el = document.getElementById('about-p1');    if(el && h.aboutP1) el.textContent = h.aboutP1;
+        el = document.getElementById('about-p2');    if(el && h.aboutP2) el.textContent = h.aboutP2;
+        el = document.getElementById('about-quote'); if(el && h.aboutQuote) el.textContent = '"' + h.aboutQuote + '"';
+        el = document.getElementById('about-quote-author'); if(el && h.aboutQuoteAuthor) el.textContent = h.aboutQuoteAuthor;
+      }
+      // Products → cards with images
+      var pd = localStorage.getItem('rm_products');
+      if(!pd) return;
+      var products = JSON.parse(pd).filter(function(p){ return p.status === 'active'; });
+      if(!products.length) return;
+      function card(p){
+        var off = p.mrp > p.price ? Math.round((1 - p.price/p.mrp)*100) : 0;
+        var img = p.images && p.images[0] ? '<img src="'+p.images[0]+'" style="width:100%;height:100%;object-fit:cover;">' : '<div class="ph '+(p.color||'ph-gold')+'"></div>';
+        return '<div class="card"><div class="card-img">'+img+'</div><div class="card-body"><div class="card-sub">'+p.category+'</div><div class="card-name">'+p.name+'</div><div class="card-price"><span class="price-now">₹'+p.price.toLocaleString('en-IN')+'</span>'+(p.mrp>p.price?'<span class="price-was">₹'+p.mrp.toLocaleString('en-IN')+'</span>':'')+(off?'<span class="price-off">'+off+'% off</span>':'')+'</div></div><div class="card-footer"><a href="product.html" class="card-btn" style="display:block;text-align:center;padding:10px;">View Product</a></div></div>';
+      }
+      var g = document.getElementById('homeProducts');
+      if(g) g.innerHTML = products.slice(0,4).map(card).join('');
+    } catch(e){}
+  })();
 </script>
-<script src="assets/js/sync.js"></script>
 </body>
 </html>

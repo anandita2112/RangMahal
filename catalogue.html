@@ -548,7 +548,34 @@
       document.getElementById('menuBtn').classList.remove('open');
     }
   });
+
+  // ── Sync admin settings from localStorage ──
+  (function(){
+    try {
+      var d = localStorage.getItem('rm_settings');
+      if(!d) return;
+      var s = JSON.parse(d);
+      var el;
+      el = document.getElementById('footer-address'); if(el && s.address) el.textContent = s.address;
+      el = document.getElementById('footer-email');   if(el && s.email){ el.textContent = s.email; el.href = 'mailto:' + s.email; }
+      el = document.getElementById('footer-phone');   if(el && s.phone) el.textContent = s.phone;
+      el = document.getElementById('social-instagram'); if(el && s.instagram) el.href = s.instagram;
+      el = document.getElementById('social-facebook');  if(el && s.facebook) el.href = s.facebook;
+      el = document.getElementById('social-whatsapp');  if(el && s.whatsapp){ el.href = 'https://wa.me/' + s.whatsapp.replace(/[^0-9]/g,''); }
+    } catch(e){}
+
+    var pd = localStorage.getItem('rm_products');
+    if(!pd) return;
+    var products = JSON.parse(pd).filter(function(p){ return p.status === 'active'; });
+    if(!products.length) return;
+    function card(p){
+      var off = p.mrp > p.price ? Math.round((1 - p.price/p.mrp)*100) : 0;
+      var img = p.images && p.images[0] ? '<img src="'+p.images[0]+'" style="width:100%;height:100%;object-fit:cover;">' : '<div class="ph '+(p.color||'ph-gold')+'"></div>';
+      return '<div class="card"><div class="card-img">'+img+'</div><div class="card-body"><div class="card-sub">'+p.category+'</div><div class="card-name">'+p.name+'</div><div class="card-price"><span class="price-now">₹'+p.price.toLocaleString('en-IN')+'</span>'+(p.mrp>p.price?'<span class="price-was">₹'+p.mrp.toLocaleString('en-IN')+'</span>':'')+(off?'<span class="price-off">'+off+'% off</span>':'')+'</div></div><div class="card-footer"><a href="product.html" class="card-btn" style="display:block;text-align:center;padding:10px;">View Product</a></div></div>';
+    }
+    var g = document.getElementById('productsGrid');
+    if(g) g.innerHTML = products.map(card).join('');
+  })();
 </script>
-<script src="assets/js/sync.js"></script>
 </body>
 </html>

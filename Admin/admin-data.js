@@ -46,6 +46,18 @@ const DEFAULT_SETTINGS = {
   giftPackagingPrice: 49,
 };
 
+const DEFAULT_HOMEPAGE = {
+  heroTitle: 'Lac Bangles<br />from the<br /><em>Heart of Jaipur</em>',
+  heroHindi: 'जयपुर की असली पहचान',
+  heroDesc: 'Pure lac bangles crafted in the historic lanes of <strong>Maniharon ka Rasta</strong> by artisan families who have perfected this craft over generations.',
+  heroImage: 'https://images.pexels.com/photos/36406040/pexels-photo-36406040.jpeg?auto=compress&cs=tinysrgb&w=400&h=380&fit=crop',
+  aboutTitle: 'The Art of Lac Bangles',
+  aboutP1: 'For over three centuries, the narrow lanes of <strong>Maniharon ka Rasta</strong> in Jaipur\'s old city have been home to families who shape, paint, and embellish lac bangles entirely by hand.',
+  aboutP2: 'Each piece is shaped from pure natural lac, hand-painted with mineral colors, and finished with intricate stone or meenakari work. No two are exactly alike — that is the beauty of something truly handcrafted.',
+  aboutQuote: 'Every bangle carries the memory of the hands that made it.',
+  aboutQuoteAuthor: '— Artisans of Maniharon ka Rasta, Jaipur',
+};
+
 const DB = {
   get(key, fallback) {
     const d = localStorage.getItem('rm_' + key);
@@ -58,11 +70,13 @@ const DB = {
   orders()    { return this.get('orders', SAMPLE_ORDERS); },
   customers() { return this.get('customers', SAMPLE_CUSTOMERS); },
   settings()  { return this.get('settings', DEFAULT_SETTINGS); },
+  homepage()  { return this.get('homepage', DEFAULT_HOMEPAGE); },
 
   saveProducts(p)  { this.set('products', p); },
   saveOrders(o)    { this.set('orders', o); },
   saveCustomers(c) { this.set('customers', c); },
   saveSettings(s)  { this.set('settings', s); },
+  saveHomepage(h)  { this.set('homepage', h); },
 
   nextProductId() {
     const products = this.products();

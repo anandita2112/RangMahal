@@ -512,7 +512,22 @@
       document.getElementById('menuBtn').classList.remove('open');
     }
   });
+
+  // ── Sync admin settings from localStorage ──
+  (function(){
+    try {
+      var d = localStorage.getItem('rm_settings');
+      if(!d) return;
+      var s = JSON.parse(d);
+      var el;
+      el = document.getElementById('footer-address'); if(el && s.address) el.textContent = s.address;
+      el = document.getElementById('footer-email');   if(el && s.email){ el.textContent = s.email; el.href = 'mailto:' + s.email; }
+      el = document.getElementById('footer-phone');   if(el && s.phone) el.textContent = s.phone;
+      el = document.getElementById('social-instagram'); if(el && s.instagram) el.href = s.instagram;
+      el = document.getElementById('social-facebook');  if(el && s.facebook) el.href = s.facebook;
+      el = document.getElementById('social-whatsapp');  if(el && s.whatsapp){ el.href = 'https://wa.me/' + s.whatsapp.replace(/[^0-9]/g,''); }
+    } catch(e){}
+  })();
 </script>
-<script src="assets/js/sync.js"></script>
 </body>
 </html>

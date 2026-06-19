@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Homepage Editor — Rang Mahal Admin</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="admin.css" />
+  <style>
+    .editor-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+    .editor-card { background: var(--white); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+    .editor-card.full { grid-column: 1 / -1; }
+    .editor-card-head {
+      padding: 18px 22px; border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; gap: 10px;
+    }
+    .editor-card-head i { color: var(--orange); }
+    .editor-card-head h3 { font-size: 15px; font-weight: 600; color: var(--brown); }
+    .editor-card-body { padding: 22px; }
+
+    .img-preview {
+      width: 100%; max-height: 260px; object-fit: cover;
+      border-radius: 8px; border: 1px solid var(--border);
+      margin-top: 10px; display: none;
+    }
+    .img-preview.show { display: block; }
+
+    textarea.form-input {
+      min-height: 80px; resize: vertical;
+      font-family: 'DM Sans', sans-serif; line-height: 1.6;
+    }
+
+    .save-bar {
+      position: sticky; bottom: 0;
+      background: var(--white); border-top: 1px solid var(--border);
+      padding: 16px 32px;
+      display: flex; align-items: center; justify-content: flex-end; gap: 12px;
+    }
+    .save-note { font-size: 12px; color: var(--text-3); margin-right: auto; }
+    .save-note i { color: var(--gold); margin-right: 4px; }
+
+    .help-text { font-size: 11px; color: var(--text-3); margin-top: 4px; }
+
+    @media (max-width: 768px) {
+      .editor-grid { grid-template-columns: 1fr; }
+      .save-bar { padding: 14px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="sidebar-overlay" id="overlay" onclick="closeSidebar()"></div>
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-brand"><img src="../assets/images/logo.png" alt="Rang Mahal" /><div class="sidebar-brand-text"><h2>Rang Mahal</h2><span>Admin</span></div></div>
+  <nav class="sidebar-nav">
+    <a class="nav-item" href="dashboard.html"><i class="fas fa-th-large"></i> Dashboard</a>
+    <a class="nav-item active" href="homepage.html"><i class="fas fa-home"></i> Homepage</a>
+    <a class="nav-item" href="orders.html"><i class="fas fa-box"></i> Orders</a>
+    <a class="nav-item" href="products.html"><i class="fas fa-tags"></i> Products</a>
+    <a class="nav-item" href="customers.html"><i class="fas fa-users"></i> Customers</a>
+    <a class="nav-item" href="settings.html"><i class="fas fa-cog"></i> Settings</a>
+    <div class="nav-spacer"></div>
+  </nav>
+  <div class="sidebar-footer"><a class="nav-item logout" href="login.html"><i class="fas fa-right-from-bracket"></i> Log Out</a></div>
+</aside>
+
+<div class="main">
+  <header class="topbar">
+    <div class="topbar-left">
+      <button class="menu-toggle" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+      <span class="topbar-title">Homepage Editor</span>
+    </div>
+    <div class="topbar-right">
+      <a href="../index.html" class="topbar-link"><i class="fas fa-external-link-alt"></i> View Store</a>
+      <div class="topbar-user"><div class="avatar">A</div><span>Admin</span></div>
+    </div>
+  </header>
+
+  <div class="content">
+    <div class="editor-grid">
+
+      <!-- Hero Text -->
+      <div class="editor-card">
+        <div class="editor-card-head">
+          <i class="fas fa-heading"></i>
+          <h3>Hero Section — Text</h3>
+        </div>
+        <div class="editor-card-body">
+          <div class="form-group">
+            <label>Main Heading (Line 1)</label>
+            <input type="text" class="form-input" id="hTitle1" placeholder="Lac Bangles" />
+          </div>
+          <div class="form-group">
+            <label>Main Heading (Line 2)</label>
+            <input type="text" class="form-input" id="hTitle2" placeholder="from the" />
+          </div>
+          <div class="form-group">
+            <label>Main Heading (Line 3 — highlighted)</label>
+            <input type="text" class="form-input" id="hTitle3" placeholder="Heart of Jaipur" />
+          </div>
+          <div class="form-group">
+            <label>Hindi Tagline</label>
+            <input type="text" class="form-input" id="hHindi" placeholder="जयपुर की असली पहचान" />
+          </div>
+          <div class="form-group">
+            <label>Description</label>
+            <textarea class="form-input" id="hDesc" placeholder="Pure lac bangles crafted in the historic lanes…"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- Hero Image -->
+      <div class="editor-card">
+        <div class="editor-card-head">
+          <i class="fas fa-image"></i>
+          <h3>Hero Section — Image</h3>
+        </div>
+        <div class="editor-card-body">
+          <div class="form-group">
+            <label>Image URL</label>
+            <input type="url" class="form-input" id="hImage" placeholder="https://images.pexels.com/..." oninput="previewImg(this.value,'heroPreview')" />
+            <p class="help-text">Paste an image URL from Pexels, Unsplash, or any image hosting site. The image appears inside the arch frame on the homepage.</p>
+          </div>
+          <img id="heroPreview" class="img-preview" alt="Preview" />
+        </div>
+      </div>
+
+      <!-- About Section -->
+      <div class="editor-card full">
+        <div class="editor-card-head">
+          <i class="fas fa-scroll"></i>
+          <h3>About Section</h3>
+        </div>
+        <div class="editor-card-body">
+          <div class="form-group">
+            <label>Section Title</label>
+            <input type="text" class="form-input" id="hAboutTitle" placeholder="The Art of Lac Bangles" />
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Paragraph 1</label>
+              <textarea class="form-input" id="hAboutP1" style="min-height:100px;"></textarea>
+            </div>
+            <div class="form-group">
+              <label>Paragraph 2</label>
+              <textarea class="form-input" id="hAboutP2" style="min-height:100px;"></textarea>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Quote</label>
+              <input type="text" class="form-input" id="hQuote" placeholder="Every bangle carries the memory…" />
+            </div>
+            <div class="form-group">
+              <label>Quote Author</label>
+              <input type="text" class="form-input" id="hQuoteAuthor" placeholder="— Artisans of Maniharon ka Rasta" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="save-bar">
+    <span class="save-note"><i class="fas fa-info-circle"></i> Changes will appear on your homepage after refresh</span>
+    <button class="btn-secondary" onclick="loadData()">Reset</button>
+    <button class="btn-primary" onclick="saveData()"><i class="fas fa-check"></i> Save Changes</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"><i class="fas fa-check-circle"></i> <span id="toastMsg"></span></div>
+
+<script src="admin-data.js"></script>
+<script>
+  function previewImg(url, id) {
+    var el = document.getElementById(id);
+    if (url && url.startsWith('http')) { el.src = url; el.classList.add('show'); }
+    else el.classList.remove('show');
+  }
+
+  function loadData() {
+    var h = DB.homepage();
+    var parts = (h.heroTitle || '').split('<br />');
+    document.getElementById('hTitle1').value = (parts[0] || '').replace(/<[^>]+>/g,'');
+    document.getElementById('hTitle2').value = (parts[1] || '').replace(/<[^>]+>/g,'');
+    document.getElementById('hTitle3').value = (parts[2] || '').replace(/<\/?em>/g,'');
+    document.getElementById('hHindi').value = h.heroHindi || '';
+    document.getElementById('hDesc').value = (h.heroDesc || '').replace(/<[^>]+>/g,'');
+    document.getElementById('hImage').value = h.heroImage || '';
+    previewImg(h.heroImage, 'heroPreview');
+    document.getElementById('hAboutTitle').value = h.aboutTitle || '';
+    document.getElementById('hAboutP1').value = (h.aboutP1 || '').replace(/<[^>]+>/g,'');
+    document.getElementById('hAboutP2').value = (h.aboutP2 || '').replace(/<[^>]+>/g,'');
+    document.getElementById('hQuote').value = h.aboutQuote || '';
+    document.getElementById('hQuoteAuthor').value = h.aboutQuoteAuthor || '';
+  }
+
+  function saveData() {
+    var t1 = document.getElementById('hTitle1').value;
+    var t2 = document.getElementById('hTitle2').value;
+    var t3 = document.getElementById('hTitle3').value;
+    var h = {
+      heroTitle: t1 + '<br />' + t2 + '<br /><em>' + t3 + '</em>',
+      heroHindi: document.getElementById('hHindi').value,
+      heroDesc: document.getElementById('hDesc').value,
+      heroImage: document.getElementById('hImage').value,
+      aboutTitle: document.getElementById('hAboutTitle').value,
+      aboutP1: document.getElementById('hAboutP1').value,
+      aboutP2: document.getElementById('hAboutP2').value,
+      aboutQuote: document.getElementById('hQuote').value,
+      aboutQuoteAuthor: document.getElementById('hQuoteAuthor').value,
+    };
+    DB.saveHomepage(h);
+    showToast('Homepage content saved');
+  }
+
+  function showToast(msg) {
+    var t = document.getElementById('toast');
+    document.getElementById('toastMsg').textContent = msg;
+    t.classList.add('show');
+    setTimeout(function(){ t.classList.remove('show'); }, 2500);
+  }
+
+  loadData();
+</script>
+</body>
+</html>

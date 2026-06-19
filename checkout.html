@@ -421,7 +421,20 @@
       document.getElementById('menuBtn').classList.remove('open');
     }
   });
+
+  // ── Sync admin settings from localStorage ──
+  (function(){
+    try {
+      var d = localStorage.getItem('rm_settings');
+      if(!d) return;
+      var s = JSON.parse(d);
+      var el;
+      el = document.getElementById('gift-price'); if(el && s.giftPackagingPrice) el.textContent = '₹' + s.giftPackagingPrice;
+      el = document.getElementById('order-total');
+      var sub = document.getElementById('order-subtotal');
+      if(el && sub && s.giftPackagingPrice){ el.textContent = '₹' + (parseInt(sub.dataset.amount||549) + s.giftPackagingPrice).toLocaleString('en-IN'); }
+    } catch(e){}
+  })();
 </script>
-<script src="assets/js/sync.js"></script>
 </body>
 </html>
