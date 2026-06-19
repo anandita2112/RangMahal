@@ -44,7 +44,16 @@
 
     @media (max-width: 768px) {
       .editor-grid { grid-template-columns: 1fr; }
-      .save-bar { padding: 14px 20px; }
+      .save-bar { padding: 14px 16px; }
+      .editor-card-body { padding: 16px; }
+      .form-input { font-size: 16px; }
+      textarea.form-input { min-height: 70px; }
+      .img-preview { max-height: 180px; }
+    }
+    @media (max-width: 480px) {
+      .save-bar { flex-wrap: wrap; gap: 10px; }
+      .save-note { font-size: 11px; }
+      .editor-card-head h3 { font-size: 14px; }
     }
   </style>
 </head>

@@ -29,7 +29,7 @@
     .search-box i { color: var(--text-3); font-size: 13px; }
     .search-box input {
       border: none; background: transparent; font-family: 'DM Sans', sans-serif;
-      font-size: 13px; color: var(--text); outline: none; width: 180px;
+      font-size: 13px; color: var(--text); outline: none; width: clamp(100px, 20vw, 180px);
     }
 
     /* Photo gallery in modal */
@@ -84,6 +84,17 @@
     }
     .url-link:hover { color: var(--brown); }
     .photo-hint { font-size: 11px; color: var(--text-3); }
+
+    @media (max-width: 768px) {
+      .top-actions { flex-direction: column; align-items: stretch; }
+      .search-box { width: 100%; }
+      .search-box input { width: 100%; }
+      .photo-item, .photo-add-btn { width: 72px; height: 72px; }
+    }
+    @media (max-width: 480px) {
+      .photo-item, .photo-add-btn { width: 64px; height: 64px; }
+      .photo-grid { gap: 8px; }
+    }
   </style>
 </head>
 <body>
@@ -196,6 +207,37 @@
       <div class="form-group">
         <label>Stock Quantity</label>
         <input type="number" class="form-input" id="fStock" placeholder="24" />
+      </div>
+
+      <!-- Description -->
+      <div class="form-group">
+        <label><i class="fas fa-align-left" style="color:var(--orange);margin-right:4px;"></i> Product Description</label>
+        <textarea class="form-input" id="fDesc" placeholder="A stunning bridal bangle set handcrafted in pure lac…" style="min-height:70px;resize:vertical;font-family:'DM Sans',sans-serif;line-height:1.6;"></textarea>
+      </div>
+
+      <!-- Specs -->
+      <div class="form-group">
+        <label><i class="fas fa-list" style="color:var(--orange);margin-right:4px;"></i> Product Specs</label>
+        <div class="form-row">
+          <div class="form-group">
+            <label style="font-size:11px;">Material</label>
+            <input type="text" class="form-input" id="fMaterial" placeholder="Pure natural lac" />
+          </div>
+          <div class="form-group">
+            <label style="font-size:11px;">Finish</label>
+            <input type="text" class="form-input" id="fFinish" placeholder="Hand-painted with gold zardosi" />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label style="font-size:11px;">Set Includes</label>
+            <input type="text" class="form-input" id="fIncludes" placeholder="6 bangles per set" />
+          </div>
+          <div class="form-group">
+            <label style="font-size:11px;">Care Instructions</label>
+            <input type="text" class="form-input" id="fCare" placeholder="Keep away from water and perfume" />
+          </div>
+        </div>
       </div>
 
       <!-- Photo Gallery -->
@@ -320,12 +362,14 @@
 
   /* ── Modal ── */
 
+  var SPEC_FIELDS = ['fDesc','fMaterial','fFinish','fIncludes','fCare'];
+
   function openModal(id) {
     document.getElementById('modal').classList.add('show');
     document.getElementById('modalTitle').textContent = id ? 'Edit Product' : 'Add Product';
     document.getElementById('editId').value = id || '';
     if (!id) {
-      ['fName','fPrice','fMrp','fStock'].forEach(f => document.getElementById(f).value = '');
+      ['fName','fPrice','fMrp','fStock'].concat(SPEC_FIELDS).forEach(f => document.getElementById(f).value = '');
       document.getElementById('fCategory').value = 'Lac Bangles';
       document.getElementById('fStatus').value = 'active';
       productImages = [];
@@ -347,8 +391,22 @@
     document.getElementById('fMrp').value = p.mrp;
     document.getElementById('fStock').value = p.stock;
     document.getElementById('fStatus').value = p.status;
+    document.getElementById('fDesc').value = p.description || '';
+    document.getElementById('fMaterial').value = (p.specs && p.specs.material) || '';
+    document.getElementById('fFinish').value = (p.specs && p.specs.finish) || '';
+    document.getElementById('fIncludes').value = (p.specs && p.specs.includes) || '';
+    document.getElementById('fCare').value = (p.specs && p.specs.care) || '';
     productImages = (p.images || []).slice();
     renderPhotoGrid();
+  }
+
+  function getSpecs() {
+    return {
+      material: document.getElementById('fMaterial').value.trim(),
+      finish: document.getElementById('fFinish').value.trim(),
+      includes: document.getElementById('fIncludes').value.trim(),
+      care: document.getElementById('fCare').value.trim()
+    };
   }
 
   function saveProduct() {
@@ -357,6 +415,9 @@
     const mrp = parseInt(document.getElementById('fMrp').value);
     const stock = parseInt(document.getElementById('fStock').value);
     if (!name || !price) { alert('Please fill in product name and price.'); return; }
+
+    var desc = document.getElementById('fDesc').value.trim();
+    var specs = getSpecs();
 
     const products = DB.products();
     const editId = parseInt(document.getElementById('editId').value);
@@ -371,6 +432,8 @@
         products[idx].stock = stock || 0;
         products[idx].status = document.getElementById('fStatus').value;
         products[idx].images = productImages.slice();
+        products[idx].description = desc;
+        products[idx].specs = specs;
       }
       showToast('Product updated successfully');
     } else {
@@ -380,7 +443,9 @@
         price, mrp: mrp || price, stock: stock || 0,
         status: document.getElementById('fStatus').value,
         color: COLORS[Math.floor(Math.random() * COLORS.length)],
-        images: productImages.slice()
+        images: productImages.slice(),
+        description: desc,
+        specs: specs
       });
       showToast('Product added successfully');
     }

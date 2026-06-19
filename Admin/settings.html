@@ -27,7 +27,13 @@
     .save-note i { color: var(--gold); margin-right: 4px; }
     @media (max-width: 768px) {
       .settings-grid { grid-template-columns: 1fr; }
-      .save-bar { padding: 14px 20px; }
+      .save-bar { padding: 14px 16px; }
+      .settings-card-body { padding: 16px; }
+      .form-input { font-size: 16px; }
+    }
+    @media (max-width: 480px) {
+      .save-bar { flex-wrap: wrap; gap: 10px; }
+      .save-note { font-size: 11px; }
     }
   </style>
 </head>

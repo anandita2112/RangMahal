@@ -204,21 +204,22 @@
       .login-page { grid-template-columns: 1fr; }
       .brand-panel { display: none; }
       .form-panel { padding: 32px 24px; }
-    }
-
-    @media (max-width: 900px) {
       .form-container { max-width: 100%; }
       .mobile-brand {
         display: flex; flex-direction: column; align-items: center;
         margin-bottom: 28px;
       }
-      .mobile-brand img {
-        height: 80px; width: auto; margin-bottom: 8px;
-      }
-      .mobile-brand span {
-        font-size: 10px; color: var(--text-3);
-        letter-spacing: 1.5px; text-transform: uppercase;
-      }
+      .mobile-brand img { height: 80px; width: auto; margin-bottom: 8px; }
+      .mobile-brand span { font-size: 10px; color: var(--text-3); letter-spacing: 1.5px; text-transform: uppercase; }
+    }
+    @media (max-width: 480px) {
+      .form-panel { padding: 24px 18px; }
+      .form-header h1 { font-size: 26px; }
+      .form-input { font-size: 16px; padding: 14px; }
+      .input-wrap input { font-size: 16px; padding: 14px 14px 14px 0; }
+      .btn-login { padding: 15px; min-height: 52px; font-size: 13px; }
+      .form-options { flex-direction: column; gap: 12px; align-items: flex-start; }
+      .mobile-brand img { height: 64px; }
     }
     @media (min-width: 901px) {
       .mobile-brand { display: none; }

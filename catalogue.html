@@ -135,17 +135,25 @@
       .results-text { display: none; }
     }
     @media (max-width: 768px) {
-      .cat-banner      { padding: 32px 20px 28px; }
-      .cat-banner h1   { font-size: 36px; }
-      .filter-toolbar  { padding: 0 20px; top: 72px; }
+      .cat-banner      { padding: 28px 20px 24px; }
+      .cat-banner h1   { font-size: 32px; }
+      .cat-banner p    { font-size: 12px; }
+      .filter-toolbar  { padding: 0 16px; top: 72px; }
       .filter-label, .filter-divider { display: none; }
-      .filter-btns     { gap: 6px; }
-      .filter-btn      { padding: 6px 12px; font-size: 12px; }
-      .shop-wrap       { padding: 24px 20px 56px; }
+      .filter-btns     { gap: 6px; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+      .filter-btn      { padding: 7px 12px; font-size: 11.5px; }
+      .sort-group      { display: none; }
+      .shop-wrap       { padding: 20px 16px 48px; }
+      .pagination      { margin-top: 36px; }
+      .pg-btn          { min-width: 44px; height: 44px; }
     }
-    @media (max-width: 520px) {
-      .cat-banner h1   { font-size: 30px; }
-      .filter-toolbar-inner { height: 50px; }
+    @media (max-width: 480px) {
+      .cat-banner      { padding: 22px 16px 20px; }
+      .cat-banner h1   { font-size: 28px; }
+      .filter-toolbar-inner { height: 48px; gap: 10px; }
+      .filter-btn      { padding: 6px 10px; font-size: 11px; }
+      .shop-wrap       { padding: 16px 12px 40px; }
+      .pagination      { gap: 4px; }
     }
   </style>
 </head>
@@ -167,7 +175,7 @@
       <div class="nav-search">
         <input type="text" placeholder="Search" class="nav-search-input" />
       </div>
-      <button class="nav-bag" id="navBag">Bag (0)</button>
+      <a href="cart.html" class="nav-bag" id="navBag">Bag (0)</a>
       <button class="nav-hamburger" id="menuBtn" aria-label="Menu" onclick="toggleMenu()">
         <span></span><span></span><span></span>
       </button>
@@ -518,19 +526,12 @@
 </footer>
 
 <script>
-  let bagCount = 0;
-  function addCart(btn) {
-    bagCount++;
-    document.getElementById('navBag').textContent = 'Bag (' + bagCount + ')';
-    btn.textContent = '✓ Added';
-    btn.style.background = '#2D8A40';
-    btn.style.color = '#fff';
-    btn.style.borderColor = '#2D8A40';
-    setTimeout(() => {
-      btn.textContent = 'Add to Cart';
-      btn.style.cssText = '';
-    }, 1600);
-  }
+  (function(){
+    var c = localStorage.getItem('rm_cart');
+    var total = c ? JSON.parse(c).reduce(function(s,i){return s+i.qty;},0) : 0;
+    var el = document.getElementById('navBag');
+    if(el) el.textContent = 'Bag (' + total + ')';
+  })();
 
   function goPage(btn) {
     document.querySelectorAll('.pg-btn').forEach(b => b.classList.remove('active'));

@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Your Bag — Rang Mahal Jaipur</title>
+  <link rel="stylesheet" href="assets/css/styles.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    .cart-header {
+      background: var(--cream); border-bottom: 1px solid var(--border);
+      padding: 32px 40px;
+    }
+    .cart-header-inner {
+      max-width: 1200px; margin: 0 auto;
+      display: flex; align-items: baseline; justify-content: space-between;
+    }
+    .cart-header h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 32px; font-weight: 700; color: var(--brown);
+    }
+    .cart-header span { font-size: 14px; color: var(--text-3); }
+
+    .cart-wrap {
+      max-width: 1200px; margin: 0 auto;
+      padding: 36px 40px 80px;
+      display: grid; grid-template-columns: 1fr 380px;
+      gap: 36px; align-items: start;
+    }
+
+    /* ── Cart items ── */
+    .cart-items { display: flex; flex-direction: column; gap: 0; }
+    .cart-item {
+      display: flex; gap: 20px; align-items: center;
+      padding: 24px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .cart-item:first-child { padding-top: 0; }
+    .cart-item-img {
+      width: 110px; height: 110px; border-radius: 10px;
+      overflow: hidden; flex-shrink: 0;
+      border: 1px solid var(--border); background: var(--cream-2);
+    }
+    .cart-item-img img { width: 100%; height: 100%; object-fit: cover; }
+    .cart-item-img .ph { width: 100%; height: 100%; }
+
+    .cart-item-info { flex: 1; }
+    .cart-item-cat {
+      font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
+      color: var(--text-3); margin-bottom: 4px;
+    }
+    .cart-item-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 18px; font-weight: 600; color: var(--brown);
+      line-height: 1.3; margin-bottom: 6px;
+    }
+    .cart-item-size { font-size: 12.5px; color: var(--text-3); margin-bottom: 14px; }
+
+    .cart-item-qty {
+      display: flex; align-items: center;
+      border: 1.5px solid var(--border); border-radius: 4px;
+      overflow: hidden; width: fit-content;
+    }
+    .qty-btn {
+      width: 34px; height: 34px; background: transparent; border: none;
+      cursor: pointer; font-size: 14px; color: var(--text-2);
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.2s;
+    }
+    .qty-btn:hover { background: var(--cream-2); }
+    .qty-val {
+      width: 36px; text-align: center; font-size: 14px; font-weight: 500;
+      color: var(--brown);
+      border-left: 1px solid var(--border); border-right: 1px solid var(--border);
+      line-height: 34px;
+    }
+
+    .cart-item-right {
+      display: flex; flex-direction: column; align-items: flex-end;
+      gap: 12px; flex-shrink: 0;
+    }
+    .cart-item-price {
+      font-size: 18px; font-weight: 600; color: var(--orange);
+    }
+    .cart-item-remove {
+      background: none; border: none; cursor: pointer;
+      font-size: 12px; color: var(--text-3);
+      display: flex; align-items: center; gap: 4px;
+      font-family: 'DM Sans', sans-serif;
+      transition: color 0.2s;
+    }
+    .cart-item-remove:hover { color: var(--red); }
+
+    /* ── Summary card ── */
+    .cart-summary {
+      background: var(--white); border: 1px solid var(--border);
+      border-radius: 12px; overflow: hidden;
+      position: sticky; top: 160px;
+    }
+    .summary-head {
+      padding: 20px 24px; border-bottom: 1px solid var(--border);
+      font-size: 11px; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--text-3);
+    }
+    .summary-body { padding: 24px; }
+    .summary-row {
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 14px; color: var(--text-2); margin-bottom: 12px;
+    }
+    .summary-row.total {
+      font-size: 17px; font-weight: 600; color: var(--brown);
+      padding-top: 16px; margin-top: 4px; margin-bottom: 0;
+      border-top: 1px solid var(--border);
+    }
+    .summary-row .free { color: #2D8A40; font-weight: 600; }
+    .summary-row .total-amt { color: var(--orange); font-size: 22px; }
+    .summary-foot { padding: 20px 24px; border-top: 1px solid var(--border); }
+    .btn-checkout {
+      display: block; width: 100%; padding: 15px; text-align: center;
+      background: var(--brown); color: var(--cream); border: none; border-radius: 6px;
+      font-family: 'DM Sans', sans-serif; font-size: 13.5px; font-weight: 600;
+      letter-spacing: 1.5px; text-transform: uppercase;
+      cursor: pointer; transition: background 0.2s; text-decoration: none;
+    }
+    .btn-checkout:hover { background: var(--orange); }
+    .continue-link {
+      display: block; text-align: center; margin-top: 14px;
+      font-size: 13px; color: var(--text-3);
+      transition: color 0.2s;
+    }
+    .continue-link:hover { color: var(--orange); }
+    .secure-note {
+      display: flex; align-items: center; justify-content: center; gap: 6px;
+      font-size: 11px; color: var(--text-3); margin-top: 14px;
+    }
+    .secure-note i { color: var(--gold); }
+
+    /* ── Empty cart ── */
+    .cart-empty {
+      text-align: center; padding: 80px 20px;
+      grid-column: 1 / -1;
+    }
+    .cart-empty i { font-size: 56px; color: var(--border); margin-bottom: 20px; }
+    .cart-empty h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 28px; font-weight: 700; color: var(--brown); margin-bottom: 8px;
+    }
+    .cart-empty p { font-size: 14px; color: var(--text-3); margin-bottom: 28px; }
+    .btn-shop {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 14px 32px; border-radius: 6px;
+      background: var(--orange); color: #fff;
+      font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600;
+      letter-spacing: 1px; text-transform: uppercase;
+      text-decoration: none; transition: background 0.2s;
+    }
+    .btn-shop:hover { background: var(--brown); }
+
+    @media (max-width: 860px) {
+      .cart-wrap { grid-template-columns: 1fr; padding: 24px 20px 56px; }
+      .cart-summary { position: static; }
+      .cart-header { padding: 24px 20px; }
+    }
+    @media (max-width: 768px) {
+      .cart-item { gap: 16px; }
+      .cart-item-img { width: 90px; height: 90px; }
+      .cart-item-name { font-size: 16px; }
+      .cart-item-price { font-size: 16px; }
+      .qty-btn { width: 44px; height: 44px; font-size: 16px; }
+      .qty-val { line-height: 44px; width: 40px; }
+      .cart-item-remove { font-size: 13px; min-height: 44px; display: flex; align-items: center; }
+    }
+    @media (max-width: 480px) {
+      .cart-wrap { padding: 20px 16px 48px; }
+      .cart-header { padding: 20px 16px; }
+      .cart-header h1 { font-size: 24px; }
+      .cart-item { flex-wrap: wrap; gap: 12px; padding: 18px 0; }
+      .cart-item-img { width: 72px; height: 72px; }
+      .cart-item-name { font-size: 15px; }
+      .cart-item-right { flex-direction: row; align-items: center; width: 100%; justify-content: space-between; }
+      .summary-body { padding: 18px; }
+      .summary-foot { padding: 16px 18px; }
+      .cart-empty h2 { font-size: 24px; }
+      .cart-empty { padding: 50px 16px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── Navbar ── -->
+<nav class="navbar">
+  <div class="nav-wrap">
+    <div class="nav-logo"><a href="index.html"><img src="assets/images/logo.png" alt="Rang Mahal" /></a></div>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="catalogue.html" class="nav-link">Shop</a>
+      <a href="index.html#about" class="nav-link">About</a>
+      <a href="index.html#contact" class="nav-link">Contact</a>
+    </div>
+    <div class="nav-right">
+      <div class="nav-search"><input type="text" placeholder="Search" class="nav-search-input" /></div>
+      <a href="cart.html" class="nav-bag" id="navBag" style="background:var(--orange);">Bag (0)</a>
+      <button class="nav-hamburger" id="menuBtn" aria-label="Menu" onclick="toggleMenu()">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <div class="mobile-menu-inner">
+    <div class="mobile-search-wrap"><i class="fas fa-search"></i><input type="text" placeholder="Search bangles, jewellery…" /></div>
+    <a href="index.html" class="mobile-nav-link">Home</a>
+    <a href="catalogue.html" class="mobile-nav-link">Shop</a>
+    <a href="index.html#about" class="mobile-nav-link">About</a>
+    <a href="index.html#contact" class="mobile-nav-link">Contact</a>
+  </div>
+</div>
+
+<!-- ── Cart header ── -->
+<div class="cart-header">
+  <div class="cart-header-inner">
+    <h1>Your Bag</h1>
+    <span id="itemCount"></span>
+  </div>
+</div>
+
+<!-- ── Cart content ── -->
+<div class="cart-wrap" id="cartWrap">
+  <!-- Filled by JS -->
+</div>
+
+<!-- ── Footer ── -->
+<footer class="footer">
+  <div class="footer-grid">
+    <div>
+      <div class="footer-logo"><img src="assets/images/logo.png" alt="Rang Mahal" /></div>
+      <p class="footer-desc">Handcrafted lac bangles &amp; Jaipur artifacts, delivered to your doorstep since 2026.</p>
+      <div class="footer-socials">
+        <a href="#" class="social-btn" id="social-instagram"><i class="fab fa-instagram"></i></a>
+        <a href="#" class="social-btn" id="social-facebook"><i class="fab fa-facebook-f"></i></a>
+        <a href="#" class="social-btn" id="social-whatsapp"><i class="fab fa-whatsapp"></i></a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h5>Quick Links</h5>
+      <ul class="footer-list">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="catalogue.html">Shop Bangles</a></li>
+        <li><a href="index.html#about">About Us</a></li>
+        <li><a href="#">Shipping Policy</a></li>
+      </ul>
+    </div>
+    <div class="footer-contact">
+      <h5>Get in Touch</h5>
+      <p><i class="fas fa-location-dot" style="color:var(--gold);margin-right:8px;"></i><span id="footer-address">Johri Bazaar, Jaipur, Rajasthan</span></p>
+      <p style="margin-top:8px;"><i class="fas fa-envelope" style="color:var(--gold);margin-right:8px;"></i><a href="mailto:hello@rangmahal.in" style="color:var(--gold);" id="footer-email">hello@rangmahal.in</a></p>
+      <p style="margin-top:8px;"><i class="fas fa-phone" style="color:var(--gold);margin-right:8px;"></i><span id="footer-phone">+91 98765 43210</span></p>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 Rang Mahal · <span class="hindi">जयपुर से, प्यार से</span></span>
+    <span>Privacy Policy &nbsp;·&nbsp; Terms of Use</span>
+  </div>
+</footer>
+
+<script>
+  function getCart() { var d = localStorage.getItem('rm_cart'); return d ? JSON.parse(d) : []; }
+  function saveCart(c) { localStorage.setItem('rm_cart', JSON.stringify(c)); }
+
+  function updateBagCount() {
+    var cart = getCart();
+    var total = cart.reduce(function(s,i){ return s + i.qty; }, 0);
+    document.getElementById('navBag').textContent = 'Bag (' + total + ')';
+    document.getElementById('itemCount').textContent = total + (total === 1 ? ' item' : ' items');
+  }
+
+  function renderCart() {
+    var cart = getCart();
+    var wrap = document.getElementById('cartWrap');
+    updateBagCount();
+
+    if (!cart.length) {
+      wrap.innerHTML =
+        '<div class="cart-empty">' +
+          '<i class="fas fa-shopping-bag"></i>' +
+          '<h2>Your bag is empty</h2>' +
+          '<p>Looks like you haven\'t added anything yet.</p>' +
+          '<a href="catalogue.html" class="btn-shop"><i class="fas fa-arrow-left"></i> Continue Shopping</a>' +
+        '</div>';
+      return;
+    }
+
+    var subtotal = cart.reduce(function(s,i){ return s + (i.price * i.qty); }, 0);
+    var shipping = subtotal >= 999 ? 0 : 79;
+    var total = subtotal + shipping;
+
+    var itemsHTML = '<div class="cart-items">' + cart.map(function(item, idx) {
+      var imgHTML = item.image
+        ? '<img src="' + item.image + '" />'
+        : '<div class="ph ' + (item.color || 'ph-gold') + '"></div>';
+
+      return '<div class="cart-item">' +
+        '<div class="cart-item-img">' + imgHTML + '</div>' +
+        '<div class="cart-item-info">' +
+          '<div class="cart-item-cat">' + (item.category || 'Lac Bangles') + '</div>' +
+          '<div class="cart-item-name">' + item.name + '</div>' +
+          '<div class="cart-item-size">Size: ' + item.size + '</div>' +
+          '<div class="cart-item-qty">' +
+            '<button class="qty-btn" onclick="changeQty(' + idx + ',-1)">−</button>' +
+            '<span class="qty-val">' + item.qty + '</span>' +
+            '<button class="qty-btn" onclick="changeQty(' + idx + ',1)">+</button>' +
+          '</div>' +
+        '</div>' +
+        '<div class="cart-item-right">' +
+          '<div class="cart-item-price">₹' + (item.price * item.qty).toLocaleString('en-IN') + '</div>' +
+          '<button class="cart-item-remove" onclick="removeItem(' + idx + ')"><i class="fas fa-trash-alt"></i> Remove</button>' +
+        '</div>' +
+      '</div>';
+    }).join('') + '</div>';
+
+    var summaryHTML =
+      '<div class="cart-summary">' +
+        '<div class="summary-head">Order Summary</div>' +
+        '<div class="summary-body">' +
+          '<div class="summary-row"><span>Subtotal (' + cart.reduce(function(s,i){return s+i.qty;},0) + ' items)</span><span>₹' + subtotal.toLocaleString('en-IN') + '</span></div>' +
+          '<div class="summary-row"><span>Shipping</span><span class="' + (shipping === 0 ? 'free' : '') + '">' + (shipping === 0 ? 'Free' : '₹' + shipping) + '</span></div>' +
+          (shipping > 0 ? '<div style="font-size:11px;color:var(--text-3);margin-bottom:12px;">Add ₹' + (999 - subtotal) + ' more for free shipping</div>' : '') +
+          '<div class="summary-row total"><span>Total</span><span class="total-amt">₹' + total.toLocaleString('en-IN') + '</span></div>' +
+        '</div>' +
+        '<div class="summary-foot">' +
+          '<a href="checkout.html" class="btn-checkout"><i class="fas fa-lock" style="margin-right:6px;"></i> Proceed to Checkout</a>' +
+          '<a href="catalogue.html" class="continue-link"><i class="fas fa-arrow-left" style="margin-right:4px;"></i> Continue Shopping</a>' +
+          '<div class="secure-note"><i class="fas fa-shield-alt"></i> Secure checkout · SSL encrypted</div>' +
+        '</div>' +
+      '</div>';
+
+    wrap.innerHTML = itemsHTML + summaryHTML;
+  }
+
+  function changeQty(idx, delta) {
+    var cart = getCart();
+    if (!cart[idx]) return;
+    cart[idx].qty = Math.max(1, cart[idx].qty + delta);
+    saveCart(cart);
+    renderCart();
+  }
+
+  function removeItem(idx) {
+    var cart = getCart();
+    cart.splice(idx, 1);
+    saveCart(cart);
+    renderCart();
+  }
+
+  function toggleMenu() {
+    document.getElementById('mobileMenu').classList.toggle('open');
+    document.getElementById('menuBtn').classList.toggle('open');
+  }
+  document.addEventListener('click', function(e) {
+    if (!e.target.closest('.navbar') && !e.target.closest('.mobile-menu')) {
+      document.getElementById('mobileMenu').classList.remove('open');
+      document.getElementById('menuBtn').classList.remove('open');
+    }
+  });
+
+  // Sync footer settings
+  (function(){
+    try {
+      var d = localStorage.getItem('rm_settings');
+      if(!d) return;
+      var s = JSON.parse(d); var el;
+      el = document.getElementById('footer-address'); if(el && s.address) el.textContent = s.address;
+      el = document.getElementById('footer-email');   if(el && s.email){ el.textContent = s.email; el.href = 'mailto:' + s.email; }
+      el = document.getElementById('footer-phone');   if(el && s.phone) el.textContent = s.phone;
+      el = document.getElementById('social-instagram'); if(el && s.instagram) el.href = s.instagram;
+      el = document.getElementById('social-facebook');  if(el && s.facebook) el.href = s.facebook;
+      el = document.getElementById('social-whatsapp');  if(el && s.whatsapp){ el.href = 'https://wa.me/' + s.whatsapp.replace(/[^0-9]/g,''); }
+    } catch(e){}
+  })();
+
+  renderCart();
+</script>
+</body>
+</html>
