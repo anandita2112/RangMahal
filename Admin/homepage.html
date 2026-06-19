@@ -127,9 +127,19 @@
         </div>
         <div class="editor-card-body">
           <div class="form-group">
-            <label>Image URL</label>
-            <input type="url" class="form-input" id="hImage" placeholder="https://images.pexels.com/..." oninput="previewImg(this.value,'heroPreview')" />
-            <p class="help-text">Paste an image URL from Pexels, Unsplash, or any image hosting site. The image appears inside the arch frame on the homepage.</p>
+            <label>Upload from device</label>
+            <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+              <button type="button" onclick="document.getElementById('heroFileInput').click()" style="display:inline-flex;align-items:center;gap:8px;padding:10px 18px;border-radius:6px;border:1.5px dashed var(--border);background:var(--cream);color:var(--text-2);font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.borderColor='var(--orange)';this.style.color='var(--orange)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text-2)'">
+                <i class="fas fa-upload"></i> Choose Image
+              </button>
+              <span style="font-size:12px;color:var(--text-3);">or</span>
+              <button type="button" onclick="pasteHeroUrl()" style="display:inline-flex;align-items:center;gap:6px;padding:10px 16px;border-radius:6px;border:none;background:none;color:var(--orange);font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer;">
+                <i class="fas fa-link"></i> Paste URL
+              </button>
+            </div>
+            <input type="file" id="heroFileInput" accept="image/*" style="display:none" onchange="handleHeroFile(this.files[0])" />
+            <input type="hidden" id="hImage" />
+            <p class="help-text" style="margin-top:8px;">Image appears inside the arch frame on the homepage.</p>
           </div>
           <img id="heroPreview" class="img-preview" alt="Preview" />
         </div>
@@ -183,10 +193,40 @@
 
 <script src="admin-data.js"></script>
 <script>
-  function previewImg(url, id) {
-    var el = document.getElementById(id);
-    if (url && url.startsWith('http')) { el.src = url; el.classList.add('show'); }
+  function showPreview(src) {
+    var el = document.getElementById('heroPreview');
+    if (src) { el.src = src; el.classList.add('show'); }
     else el.classList.remove('show');
+  }
+
+  function handleHeroFile(file) {
+    if (!file || !file.type.startsWith('image/')) return;
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      var img = new Image();
+      img.onload = function() {
+        var canvas = document.createElement('canvas');
+        var maxW = 800, w = img.width, h = img.height;
+        if (w > maxW) { h = Math.round(h * maxW / w); w = maxW; }
+        canvas.width = w; canvas.height = h;
+        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+        var dataUrl = canvas.toDataURL('image/jpeg', 0.75);
+        document.getElementById('hImage').value = dataUrl;
+        showPreview(dataUrl);
+        showToast('Image uploaded');
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+    document.getElementById('heroFileInput').value = '';
+  }
+
+  function pasteHeroUrl() {
+    var url = prompt('Paste image URL (from Pexels, Unsplash, etc.):');
+    if (url && url.trim().startsWith('http')) {
+      document.getElementById('hImage').value = url.trim();
+      showPreview(url.trim());
+    }
   }
 
   function loadData() {
@@ -198,7 +238,7 @@
     document.getElementById('hHindi').value = h.heroHindi || '';
     document.getElementById('hDesc').value = (h.heroDesc || '').replace(/<[^>]+>/g,'');
     document.getElementById('hImage').value = h.heroImage || '';
-    previewImg(h.heroImage, 'heroPreview');
+    showPreview(h.heroImage || '');
     document.getElementById('hAboutTitle').value = h.aboutTitle || '';
     document.getElementById('hAboutP1').value = (h.aboutP1 || '').replace(/<[^>]+>/g,'');
     document.getElementById('hAboutP2').value = (h.aboutP2 || '').replace(/<[^>]+>/g,'');
