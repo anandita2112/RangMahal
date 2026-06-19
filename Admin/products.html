@@ -12,6 +12,7 @@
       width: 40px; height: 40px; border-radius: 6px;
       overflow: hidden; flex-shrink: 0; border: 1px solid var(--border);
     }
+    .product-thumb img { width: 100%; height: 100%; object-fit: cover; }
     .product-thumb .ph { width: 100%; height: 100%; }
     .product-cell { display: flex; align-items: center; gap: 12px; }
     .product-cell-name { font-weight: 500; color: var(--brown); }
@@ -30,6 +31,59 @@
       border: none; background: transparent; font-family: 'DM Sans', sans-serif;
       font-size: 13px; color: var(--text); outline: none; width: 180px;
     }
+
+    /* Photo gallery in modal */
+    .photo-label {
+      font-size: 11.5px; font-weight: 600; letter-spacing: 0.5px;
+      text-transform: uppercase; color: var(--text-2); margin-bottom: 10px;
+    }
+    .photo-grid {
+      display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 6px;
+    }
+    .photo-item {
+      width: 88px; height: 88px; border-radius: 8px;
+      overflow: hidden; position: relative;
+      border: 1px solid var(--border);
+    }
+    .photo-item img { width: 100%; height: 100%; object-fit: cover; }
+    .photo-item.first::after {
+      content: 'MAIN'; position: absolute; bottom: 0; left: 0; right: 0;
+      background: var(--orange); color: #fff; text-align: center;
+      font-size: 8px; font-weight: 700; letter-spacing: 1px; padding: 2px;
+    }
+    .photo-remove {
+      position: absolute; top: 4px; right: 4px;
+      width: 20px; height: 20px; border-radius: 50%;
+      background: rgba(0,0,0,0.6); color: #fff;
+      border: none; cursor: pointer; font-size: 10px;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.2s;
+    }
+    .photo-remove:hover { background: var(--red); }
+    .photo-add-btn {
+      width: 88px; height: 88px; border-radius: 8px;
+      border: 2px dashed var(--border);
+      background: var(--cream); color: var(--text-3);
+      cursor: pointer;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 4px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 10px; font-weight: 500;
+      transition: all 0.2s;
+    }
+    .photo-add-btn i { font-size: 18px; }
+    .photo-add-btn:hover { border-color: var(--orange); color: var(--orange); }
+    .photo-actions {
+      display: flex; align-items: center; gap: 12px; margin-top: 8px;
+    }
+    .url-link {
+      font-size: 11.5px; color: var(--orange); cursor: pointer;
+      display: flex; align-items: center; gap: 4px;
+      background: none; border: none; font-family: 'DM Sans', sans-serif;
+      transition: color 0.2s;
+    }
+    .url-link:hover { color: var(--brown); }
+    .photo-hint { font-size: 11px; color: var(--text-3); }
   </style>
 </head>
 <body>
@@ -62,7 +116,6 @@
   </header>
 
   <div class="content">
-
     <div class="panel">
       <div class="panel-head">
         <div class="top-actions">
@@ -95,7 +148,6 @@
         <p>Add your first product to get started.</p>
       </div>
     </div>
-
   </div>
 </div>
 
@@ -145,26 +197,23 @@
         <label>Stock Quantity</label>
         <input type="number" class="form-input" id="fStock" placeholder="24" />
       </div>
+
+      <!-- Photo Gallery -->
       <div class="form-group">
-        <label><i class="fas fa-image" style="color:var(--orange);margin-right:4px;"></i> Main Image URL</label>
-        <input type="url" class="form-input" id="fImg1" placeholder="https://images.pexels.com/..." oninput="previewImg(this.value)" />
-        <p style="font-size:11px;color:var(--text-3);margin-top:4px;">Paste image URL from Pexels, Unsplash, or any link</p>
-      </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label>Image 2 URL</label>
-          <input type="url" class="form-input" id="fImg2" placeholder="Optional" />
+        <div class="photo-label"><i class="fas fa-camera" style="color:var(--orange);margin-right:4px;"></i> Product Photos</div>
+        <div class="photo-grid" id="photoGrid"></div>
+        <div class="photo-actions">
+          <button type="button" class="photo-add-btn" onclick="document.getElementById('fileInput').click()">
+            <i class="fas fa-plus"></i>
+            Add Photo
+          </button>
+          <input type="file" id="fileInput" accept="image/*" multiple style="display:none" onchange="handleFiles(this.files)" />
+          <button type="button" class="url-link" onclick="addByUrl()">
+            <i class="fas fa-link"></i> Paste image URL
+          </button>
         </div>
-        <div class="form-group">
-          <label>Image 3 URL</label>
-          <input type="url" class="form-input" id="fImg3" placeholder="Optional" />
-        </div>
+        <p class="photo-hint">First photo will be the main product image. You can add as many as you want.</p>
       </div>
-      <div class="form-group">
-        <label>Image 4 URL</label>
-        <input type="url" class="form-input" id="fImg4" placeholder="Optional" />
-      </div>
-      <img id="imgPreview" style="width:100%;max-height:150px;object-fit:cover;border-radius:8px;border:1px solid var(--border);margin-top:6px;display:none;" />
     </div>
     <div class="modal-footer">
       <button class="btn-secondary" onclick="closeModal()">Cancel</button>
@@ -178,6 +227,62 @@
 <script src="admin-data.js"></script>
 <script>
   const COLORS = ['ph-red','ph-blue','ph-gold','ph-green','ph-purple','ph-pink','ph-teal','ph-maroon','ph-saffron','ph-ivory','ph-navy','ph-rose'];
+  var productImages = [];
+
+  /* ── Photo handling ── */
+
+  function handleFiles(files) {
+    for (var i = 0; i < files.length; i++) {
+      resizeAndStore(files[i]);
+    }
+    document.getElementById('fileInput').value = '';
+  }
+
+  function resizeAndStore(file) {
+    if (!file.type.startsWith('image/')) return;
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      var img = new Image();
+      img.onload = function() {
+        var canvas = document.createElement('canvas');
+        var maxW = 600, w = img.width, h = img.height;
+        if (w > maxW) { h = Math.round(h * maxW / w); w = maxW; }
+        canvas.width = w;
+        canvas.height = h;
+        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+        var dataUrl = canvas.toDataURL('image/jpeg', 0.7);
+        productImages.push(dataUrl);
+        renderPhotoGrid();
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function addByUrl() {
+    var url = prompt('Paste image URL (from Pexels, Unsplash, etc.):');
+    if (url && url.trim().startsWith('http')) {
+      productImages.push(url.trim());
+      renderPhotoGrid();
+    }
+  }
+
+  function removePhoto(index) {
+    productImages.splice(index, 1);
+    renderPhotoGrid();
+  }
+
+  function renderPhotoGrid() {
+    var grid = document.getElementById('photoGrid');
+    grid.innerHTML = productImages.map(function(src, i) {
+      return '<div class="photo-item' + (i === 0 ? ' first' : '') + '">' +
+        '<img src="' + src + '" />' +
+        '<button class="photo-remove" onclick="removePhoto(' + i + ')">×</button>' +
+      '</div>';
+    }).join('');
+  }
+
+  /* ── Product table ── */
 
   function renderProducts() {
     const products = DB.products();
@@ -195,8 +300,8 @@
       <tr>
         <td>
           <div class="product-cell">
-            <div class="product-thumb">${p.images && p.images[0] ? '<img src="'+p.images[0]+'" style="width:100%;height:100%;object-fit:cover;">' : '<div class="ph '+(p.color||'ph-gold')+'"></div>'}</div>
-            <div><div class="product-cell-name">${p.name}</div><div class="product-cell-cat">${p.category}</div></div>
+            <div class="product-thumb">${p.images && p.images[0] ? '<img src="'+p.images[0]+'">' : '<div class="ph '+(p.color||'ph-gold')+'"></div>'}</div>
+            <div><div class="product-cell-name">${p.name}</div><div class="product-cell-cat">${p.category}${p.images ? ' · '+p.images.length+' photos' : ''}</div></div>
           </div>
         </td>
         <td>${formatPrice(p.price)}</td>
@@ -213,18 +318,23 @@
     `).join('');
   }
 
+  /* ── Modal ── */
+
   function openModal(id) {
     document.getElementById('modal').classList.add('show');
     document.getElementById('modalTitle').textContent = id ? 'Edit Product' : 'Add Product';
     document.getElementById('editId').value = id || '';
-    if (!id) { ['fName','fPrice','fMrp','fStock','fImg1','fImg2','fImg3','fImg4'].forEach(f => document.getElementById(f).value = ''); document.getElementById('fCategory').value = 'Lac Bangles'; document.getElementById('fStatus').value = 'active'; document.getElementById('imgPreview').style.display='none'; }
+    if (!id) {
+      ['fName','fPrice','fMrp','fStock'].forEach(f => document.getElementById(f).value = '');
+      document.getElementById('fCategory').value = 'Lac Bangles';
+      document.getElementById('fStatus').value = 'active';
+      productImages = [];
+      renderPhotoGrid();
+    }
   }
-  function closeModal() { document.getElementById('modal').classList.remove('show'); }
 
-  function previewImg(url) {
-    var el = document.getElementById('imgPreview');
-    if (url && url.startsWith('http')) { el.src = url; el.style.display = 'block'; }
-    else el.style.display = 'none';
+  function closeModal() {
+    document.getElementById('modal').classList.remove('show');
   }
 
   function editProduct(id) {
@@ -237,12 +347,8 @@
     document.getElementById('fMrp').value = p.mrp;
     document.getElementById('fStock').value = p.stock;
     document.getElementById('fStatus').value = p.status;
-    var imgs = p.images || [];
-    document.getElementById('fImg1').value = imgs[0] || '';
-    document.getElementById('fImg2').value = imgs[1] || '';
-    document.getElementById('fImg3').value = imgs[2] || '';
-    document.getElementById('fImg4').value = imgs[3] || '';
-    previewImg(imgs[0] || '');
+    productImages = (p.images || []).slice();
+    renderPhotoGrid();
   }
 
   function saveProduct() {
@@ -251,8 +357,6 @@
     const mrp = parseInt(document.getElementById('fMrp').value);
     const stock = parseInt(document.getElementById('fStock').value);
     if (!name || !price) { alert('Please fill in product name and price.'); return; }
-
-    var images = [document.getElementById('fImg1').value, document.getElementById('fImg2').value, document.getElementById('fImg3').value, document.getElementById('fImg4').value].filter(u => u.trim());
 
     const products = DB.products();
     const editId = parseInt(document.getElementById('editId').value);
@@ -266,7 +370,7 @@
         products[idx].mrp = mrp || price;
         products[idx].stock = stock || 0;
         products[idx].status = document.getElementById('fStatus').value;
-        products[idx].images = images;
+        products[idx].images = productImages.slice();
       }
       showToast('Product updated successfully');
     } else {
@@ -276,12 +380,18 @@
         price, mrp: mrp || price, stock: stock || 0,
         status: document.getElementById('fStatus').value,
         color: COLORS[Math.floor(Math.random() * COLORS.length)],
-        images: images
+        images: productImages.slice()
       });
       showToast('Product added successfully');
     }
 
-    DB.saveProducts(products);
+    try {
+      DB.saveProducts(products);
+    } catch(e) {
+      alert('Storage is full! Try removing some product photos or deleting unused products.');
+      return;
+    }
+
     closeModal();
     renderProducts();
   }
