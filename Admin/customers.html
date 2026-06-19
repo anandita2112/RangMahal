@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Customers — Rang Mahal Admin</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="admin.css" />
+</head>
+<body>
+
+<div class="sidebar-overlay" id="overlay" onclick="closeSidebar()"></div>
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-brand"><img src="../assets/images/logo.png" alt="Rang Mahal" /><div class="sidebar-brand-text"><h2>Rang Mahal</h2><span>Admin</span></div></div>
+  <nav class="sidebar-nav">
+    <a class="nav-item" href="dashboard.html"><i class="fas fa-th-large"></i> Dashboard</a>
+    <a class="nav-item" href="orders.html"><i class="fas fa-box"></i> Orders</a>
+    <a class="nav-item" href="products.html"><i class="fas fa-tags"></i> Products</a>
+    <a class="nav-item active" href="customers.html"><i class="fas fa-users"></i> Customers</a>
+    <a class="nav-item" href="settings.html"><i class="fas fa-cog"></i> Settings</a>
+    <div class="nav-spacer"></div>
+  </nav>
+  <div class="sidebar-footer"><a class="nav-item logout" href="login.html"><i class="fas fa-right-from-bracket"></i> Log Out</a></div>
+</aside>
+
+<div class="main">
+  <header class="topbar">
+    <div class="topbar-left">
+      <button class="menu-toggle" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+      <span class="topbar-title">Customers</span>
+    </div>
+    <div class="topbar-right">
+      <a href="../index.html" class="topbar-link"><i class="fas fa-external-link-alt"></i> View Store</a>
+      <div class="topbar-user"><div class="avatar">A</div><span>Admin</span></div>
+    </div>
+  </header>
+
+  <div class="content">
+
+    <div class="stats-grid" style="grid-template-columns: repeat(3,1fr);">
+      <div class="stat-card">
+        <div class="stat-number" id="sTotal">0</div>
+        <div class="stat-label">Total Customers</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number" style="color:var(--orange);" id="sOrders">0</div>
+        <div class="stat-label">Total Orders</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number" style="color:var(--green);" id="sSpent">₹0</div>
+        <div class="stat-label">Total Revenue</div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head">
+        <span class="panel-title">All Customers</span>
+      </div>
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr>
+              <th>Customer</th>
+              <th>Email</th>
+              <th>Phone</th>
+              <th>Orders</th>
+              <th>Total Spent</th>
+              <th>Joined</th>
+            </tr>
+          </thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
+      <div class="empty" id="empty" style="display:none;">
+        <i class="fas fa-users"></i>
+        <h3>No customers yet</h3>
+        <p>Customers will appear here when they place orders.</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="admin-data.js"></script>
+<script>
+  function render() {
+    const customers = DB.customers();
+
+    document.getElementById('sTotal').textContent = customers.length;
+    document.getElementById('sOrders').textContent = customers.reduce((s,c) => s + c.orders, 0);
+    document.getElementById('sSpent').textContent = formatPrice(customers.reduce((s,c) => s + c.spent, 0));
+
+    const tbody = document.getElementById('tbody');
+    if (!customers.length) { tbody.innerHTML = ''; document.getElementById('empty').style.display = 'block'; return; }
+    document.getElementById('empty').style.display = 'none';
+
+    tbody.innerHTML = customers.map(c => `
+      <tr>
+        <td>
+          <div class="customer-cell">
+            <div class="customer-avatar">${c.initials}</div>
+            <strong style="color:var(--brown)">${c.name}</strong>
+          </div>
+        </td>
+        <td>${c.email}</td>
+        <td>${c.phone}</td>
+        <td>${c.orders}</td>
+        <td style="font-weight:600;color:var(--orange);">${formatPrice(c.spent)}</td>
+        <td>${c.date}</td>
+      </tr>
+    `).join('');
+  }
+  render();
+</script>
+</body>
+</html>

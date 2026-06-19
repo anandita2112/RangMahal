@@ -433,7 +433,7 @@
     <span class="craft-sep">·</span>
     <div class="craft-item"><i class="fas fa-store"></i> Maniharon ka Rasta, Jaipur</div>
     <span class="craft-sep">·</span>
-    <div class="craft-item"><i class="fas fa-truck-fast"></i> Free Shipping above ₹999</div>
+    <div class="craft-item"><i class="fas fa-truck-fast"></i> <span id="free-ship-text">Free Shipping above ₹999</span></div>
   </div>
 </div>
 
@@ -453,76 +453,11 @@
       </a>
     </div>
 
-    <div class="grid-4">
-      <div class="card">
-        <div class="card-img">
-          <div class="ph ph-red"></div>
-          <div class="card-badge badge-hot">Bestseller</div>
-          <button class="card-wish"><i class="far fa-heart"></i></button>
-        </div>
-        <div class="card-body">
-          <div class="card-sub">Lac Bangles</div>
-          <div class="card-name">Bridal Set — Scarlet &amp; Gold</div>
-          <div class="card-price">
-            <span class="price-now">₹549</span>
-            <span class="price-was">₹799</span>
-            <span class="price-off">31% off</span>
-          </div>
-        </div>
-        <div class="card-footer"><button class="card-btn" onclick="addCart(this)">Add to Cart</button></div>
-      </div>
-
-      <div class="card">
-        <div class="card-img">
-          <div class="ph ph-blue"></div>
-          <button class="card-wish"><i class="far fa-heart"></i></button>
-        </div>
-        <div class="card-body">
-          <div class="card-sub">Lac Bangles</div>
-          <div class="card-name">Meenakari Set — Royal Blue</div>
-          <div class="card-price">
-            <span class="price-now">₹399</span>
-            <span class="price-was">₹599</span>
-            <span class="price-off">33% off</span>
-          </div>
-        </div>
-        <div class="card-footer"><button class="card-btn" onclick="addCart(this)">Add to Cart</button></div>
-      </div>
-
-      <div class="card">
-        <div class="card-img">
-          <div class="ph ph-gold"></div>
-          <div class="card-badge badge-new">New</div>
-          <button class="card-wish"><i class="far fa-heart"></i></button>
-        </div>
-        <div class="card-body">
-          <div class="card-sub">Lac Bangles</div>
-          <div class="card-name">Zardosi Set — Gold &amp; Ivory</div>
-          <div class="card-price">
-            <span class="price-now">₹649</span>
-            <span class="price-was">₹950</span>
-            <span class="price-off">32% off</span>
-          </div>
-        </div>
-        <div class="card-footer"><button class="card-btn" onclick="addCart(this)">Add to Cart</button></div>
-      </div>
-
-      <div class="card">
-        <div class="card-img">
-          <div class="ph ph-green"></div>
-          <button class="card-wish"><i class="far fa-heart"></i></button>
-        </div>
-        <div class="card-body">
-          <div class="card-sub">Lac Bangles</div>
-          <div class="card-name">Floral Set — Emerald &amp; Gold</div>
-          <div class="card-price">
-            <span class="price-now">₹479</span>
-            <span class="price-was">₹699</span>
-            <span class="price-off">31% off</span>
-          </div>
-        </div>
-        <div class="card-footer"><button class="card-btn" onclick="addCart(this)">Add to Cart</button></div>
-      </div>
+    <div class="grid-4" id="homeProducts">
+      <div class="card"><div class="card-img"><div class="ph ph-red"></div><button class="card-wish"><i class="far fa-heart"></i></button></div><div class="card-body"><div class="card-sub">Lac Bangles</div><div class="card-name">Bridal Set — Scarlet &amp; Gold</div><div class="card-price"><span class="price-now">₹549</span><span class="price-was">₹799</span><span class="price-off">31% off</span></div></div><div class="card-footer"><a href="product.html" class="card-btn" style="display:block;text-align:center;padding:10px;">View Product</a></div></div>
+      <div class="card"><div class="card-img"><div class="ph ph-blue"></div><button class="card-wish"><i class="far fa-heart"></i></button></div><div class="card-body"><div class="card-sub">Lac Bangles</div><div class="card-name">Meenakari Set — Royal Blue</div><div class="card-price"><span class="price-now">₹399</span><span class="price-was">₹599</span><span class="price-off">33% off</span></div></div><div class="card-footer"><a href="product.html" class="card-btn" style="display:block;text-align:center;padding:10px;">View Product</a></div></div>
+      <div class="card"><div class="card-img"><div class="ph ph-gold"></div><button class="card-wish"><i class="far fa-heart"></i></button></div><div class="card-body"><div class="card-sub">Lac Bangles</div><div class="card-name">Zardosi Set — Gold &amp; Ivory</div><div class="card-price"><span class="price-now">₹649</span><span class="price-was">₹950</span><span class="price-off">32% off</span></div></div><div class="card-footer"><a href="product.html" class="card-btn" style="display:block;text-align:center;padding:10px;">View Product</a></div></div>
+      <div class="card"><div class="card-img"><div class="ph ph-green"></div><button class="card-wish"><i class="far fa-heart"></i></button></div><div class="card-body"><div class="card-sub">Lac Bangles</div><div class="card-name">Floral Set — Emerald &amp; Gold</div><div class="card-price"><span class="price-now">₹479</span><span class="price-was">₹699</span><span class="price-off">31% off</span></div></div><div class="card-footer"><a href="product.html" class="card-btn" style="display:block;text-align:center;padding:10px;">View Product</a></div></div>
     </div>
 
     <div style="text-align:center; margin-top:48px;">
@@ -635,9 +570,9 @@
         delivered to your doorstep since 2026.
       </p>
       <div class="footer-socials">
-        <a href="#" class="social-btn"><i class="fab fa-instagram"></i></a>
-        <a href="#" class="social-btn"><i class="fab fa-facebook-f"></i></a>
-        <a href="#" class="social-btn"><i class="fab fa-whatsapp"></i></a>
+        <a href="#" class="social-btn" id="social-instagram"><i class="fab fa-instagram"></i></a>
+        <a href="#" class="social-btn" id="social-facebook"><i class="fab fa-facebook-f"></i></a>
+        <a href="#" class="social-btn" id="social-whatsapp"><i class="fab fa-whatsapp"></i></a>
       </div>
     </div>
 
@@ -654,9 +589,9 @@
 
     <div class="footer-contact">
       <h5>Get in Touch</h5>
-      <p><i class="fas fa-location-dot" style="color:var(--gold);margin-right:8px;"></i>Maniharon ka Rasta, Jaipur 302003</p>
-      <p><i class="fas fa-envelope"     style="color:var(--gold);margin-right:8px;"></i><a href="mailto:hello@rangmahal.in">hello@rangmahal.in</a></p>
-      <p><i class="fas fa-phone"        style="color:var(--gold);margin-right:8px;"></i>+91 98765 43210</p>
+      <p><i class="fas fa-location-dot" style="color:var(--gold);margin-right:8px;"></i><span id="footer-address">Maniharon ka Rasta, Jaipur 302003</span></p>
+      <p><i class="fas fa-envelope"     style="color:var(--gold);margin-right:8px;"></i><a href="mailto:hello@rangmahal.in" id="footer-email">hello@rangmahal.in</a></p>
+      <p><i class="fas fa-phone"        style="color:var(--gold);margin-right:8px;"></i><span id="footer-phone">+91 98765 43210</span></p>
       <p style="margin-top:18px;font-size:12px;color:rgba(251,248,243,0.35);">Mon – Sat &nbsp;·&nbsp; 10 am – 7 pm IST</p>
     </div>
   </div>
@@ -690,5 +625,6 @@
     if (!e.target.closest('.navbar') && !e.target.closest('.mobile-menu')) closeMenu();
   });
 </script>
+<script src="assets/js/sync.js"></script>
 </body>
 </html>

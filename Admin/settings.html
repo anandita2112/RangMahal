@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Settings — Rang Mahal Admin</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="admin.css" />
+  <style>
+    .settings-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+    .settings-card { background: var(--white); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+    .settings-card-head {
+      padding: 18px 22px; border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; gap: 10px;
+    }
+    .settings-card-head i { color: var(--orange); }
+    .settings-card-head h3 { font-size: 15px; font-weight: 600; color: var(--brown); }
+    .settings-card-body { padding: 22px; }
+    .save-bar {
+      position: sticky; bottom: 0;
+      background: var(--white); border-top: 1px solid var(--border);
+      padding: 16px 32px;
+      display: flex; align-items: center; justify-content: flex-end; gap: 12px;
+    }
+    .save-note { font-size: 12px; color: var(--text-3); margin-right: auto; }
+    .save-note i { color: var(--gold); margin-right: 4px; }
+    @media (max-width: 768px) {
+      .settings-grid { grid-template-columns: 1fr; }
+      .save-bar { padding: 14px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="sidebar-overlay" id="overlay" onclick="closeSidebar()"></div>
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-brand"><img src="../assets/images/logo.png" alt="Rang Mahal" /><div class="sidebar-brand-text"><h2>Rang Mahal</h2><span>Admin</span></div></div>
+  <nav class="sidebar-nav">
+    <a class="nav-item" href="dashboard.html"><i class="fas fa-th-large"></i> Dashboard</a>
+    <a class="nav-item" href="orders.html"><i class="fas fa-box"></i> Orders</a>
+    <a class="nav-item" href="products.html"><i class="fas fa-tags"></i> Products</a>
+    <a class="nav-item" href="customers.html"><i class="fas fa-users"></i> Customers</a>
+    <a class="nav-item active" href="settings.html"><i class="fas fa-cog"></i> Settings</a>
+    <div class="nav-spacer"></div>
+  </nav>
+  <div class="sidebar-footer"><a class="nav-item logout" href="login.html"><i class="fas fa-right-from-bracket"></i> Log Out</a></div>
+</aside>
+
+<div class="main">
+  <header class="topbar">
+    <div class="topbar-left">
+      <button class="menu-toggle" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+      <span class="topbar-title">Settings</span>
+    </div>
+    <div class="topbar-right">
+      <a href="../index.html" class="topbar-link"><i class="fas fa-external-link-alt"></i> View Store</a>
+      <div class="topbar-user"><div class="avatar">A</div><span>Admin</span></div>
+    </div>
+  </header>
+
+  <div class="content">
+
+    <div class="settings-grid">
+
+      <!-- Store Info -->
+      <div class="settings-card">
+        <div class="settings-card-head">
+          <i class="fas fa-store"></i>
+          <h3>Store Information</h3>
+        </div>
+        <div class="settings-card-body">
+          <div class="form-group">
+            <label>Store Name</label>
+            <input type="text" class="form-input" id="sName" />
+          </div>
+          <div class="form-group">
+            <label>Tagline</label>
+            <input type="text" class="form-input" id="sTagline" />
+          </div>
+          <div class="form-group">
+            <label>Store Address</label>
+            <input type="text" class="form-input" id="sAddress" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Contact -->
+      <div class="settings-card">
+        <div class="settings-card-head">
+          <i class="fas fa-address-book"></i>
+          <h3>Contact Details</h3>
+        </div>
+        <div class="settings-card-body">
+          <div class="form-group">
+            <label>Email Address</label>
+            <input type="email" class="form-input" id="sEmail" />
+          </div>
+          <div class="form-group">
+            <label>Phone Number</label>
+            <input type="tel" class="form-input" id="sPhone" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Social -->
+      <div class="settings-card">
+        <div class="settings-card-head">
+          <i class="fas fa-share-alt"></i>
+          <h3>Social Media</h3>
+        </div>
+        <div class="settings-card-body">
+          <div class="form-group">
+            <label><i class="fab fa-instagram" style="color:var(--orange);margin-right:6px;"></i>Instagram URL</label>
+            <input type="url" class="form-input" id="sInsta" placeholder="https://instagram.com/rangmahal" />
+          </div>
+          <div class="form-group">
+            <label><i class="fab fa-facebook" style="color:var(--orange);margin-right:6px;"></i>Facebook URL</label>
+            <input type="url" class="form-input" id="sFb" placeholder="https://facebook.com/rangmahal" />
+          </div>
+          <div class="form-group">
+            <label><i class="fab fa-whatsapp" style="color:var(--orange);margin-right:6px;"></i>WhatsApp Number</label>
+            <input type="tel" class="form-input" id="sWa" placeholder="+91 98765 43210" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Shipping -->
+      <div class="settings-card">
+        <div class="settings-card-head">
+          <i class="fas fa-truck"></i>
+          <h3>Shipping & Pricing</h3>
+        </div>
+        <div class="settings-card-body">
+          <div class="form-group">
+            <label>Free Shipping Above (₹)</label>
+            <input type="number" class="form-input" id="sShipMin" />
+          </div>
+          <div class="form-group">
+            <label>Gift Packaging Price (₹)</label>
+            <input type="number" class="form-input" id="sGiftPrice" />
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- Save bar -->
+  <div class="save-bar">
+    <span class="save-note"><i class="fas fa-info-circle"></i> Changes are saved to your browser</span>
+    <button class="btn-secondary" onclick="loadSettings()">Reset</button>
+    <button class="btn-primary" onclick="saveSettings()"><i class="fas fa-check"></i> Save Changes</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"><i class="fas fa-check-circle"></i> <span id="toastMsg"></span></div>
+
+<script src="admin-data.js"></script>
+<script>
+  function loadSettings() {
+    const s = DB.settings();
+    document.getElementById('sName').value = s.storeName || '';
+    document.getElementById('sTagline').value = s.tagline || '';
+    document.getElementById('sEmail').value = s.email || '';
+    document.getElementById('sPhone').value = s.phone || '';
+    document.getElementById('sAddress').value = s.address || '';
+    document.getElementById('sInsta').value = s.instagram || '';
+    document.getElementById('sFb').value = s.facebook || '';
+    document.getElementById('sWa').value = s.whatsapp || '';
+    document.getElementById('sShipMin').value = s.freeShippingMin || 999;
+    document.getElementById('sGiftPrice').value = s.giftPackagingPrice || 49;
+  }
+
+  function saveSettings() {
+    const s = {
+      storeName: document.getElementById('sName').value,
+      tagline: document.getElementById('sTagline').value,
+      email: document.getElementById('sEmail').value,
+      phone: document.getElementById('sPhone').value,
+      address: document.getElementById('sAddress').value,
+      instagram: document.getElementById('sInsta').value,
+      facebook: document.getElementById('sFb').value,
+      whatsapp: document.getElementById('sWa').value,
+      freeShippingMin: parseInt(document.getElementById('sShipMin').value) || 999,
+      giftPackagingPrice: parseInt(document.getElementById('sGiftPrice').value) || 49,
+    };
+    DB.saveSettings(s);
+    showToast('Settings saved successfully');
+  }
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    document.getElementById('toastMsg').textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2500);
+  }
+
+  loadSettings();
+</script>
+</body>
+</html>

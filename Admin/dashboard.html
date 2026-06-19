@@ -6,440 +6,95 @@
   <title>Dashboard — Rang Mahal Admin</title>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="admin.css" />
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    :root {
-      --cream:   #FBF8F3;
-      --cream-2: #F0E8D8;
-      --white:   #FFFFFF;
-      --brown:   #3C1E0C;
-      --brown-2: #7A4A2A;
-      --orange:  #C4521A;
-      --gold:    #BE8820;
-      --border:  #E2D0B8;
-      --text:    #3C1E0C;
-      --text-2:  #7A4A2A;
-      --text-3:  #A07850;
-      --green:   #2D8A40;
-      --red:     #B52828;
-      --sidebar-w: 260px;
-      --t: 0.25s ease;
-    }
-
-    html, body { height: 100%; }
-    body {
-      font-family: 'DM Sans', sans-serif;
-      background: #F5F0EA;
-      color: var(--text);
-      display: flex;
-    }
-    a { text-decoration: none; color: inherit; }
-    img { display: block; max-width: 100%; }
-
-    /* ══════════════════════════════════════════
-       SIDEBAR
-    ══════════════════════════════════════════ */
-    .sidebar {
-      width: var(--sidebar-w);
-      background: var(--brown);
-      display: flex; flex-direction: column;
-      position: fixed; top: 0; left: 0; bottom: 0;
-      z-index: 100;
-      transition: transform 0.3s ease;
-    }
-
-    .sidebar-brand {
-      padding: 28px 24px 24px;
-      border-bottom: 1px solid rgba(255,255,255,0.08);
-      display: flex; align-items: center; gap: 14px;
-    }
-    .sidebar-brand img {
-      height: 48px; filter: brightness(0) invert(1);
-    }
-    .sidebar-brand-text h2 {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 18px; font-weight: 700; color: var(--cream);
-      line-height: 1.1;
-    }
-    .sidebar-brand-text span {
-      font-size: 10px; color: rgba(251,248,243,0.4);
-      letter-spacing: 1.5px; text-transform: uppercase;
-    }
-
-    .sidebar-nav {
-      flex: 1; padding: 16px 12px;
-      display: flex; flex-direction: column; gap: 2px;
-    }
-    .nav-item {
-      display: flex; align-items: center; gap: 12px;
-      padding: 11px 14px; border-radius: 8px;
-      font-size: 13.5px; font-weight: 500; color: rgba(251,248,243,0.6);
-      transition: all var(--t); cursor: pointer;
-    }
-    .nav-item i { width: 18px; text-align: center; font-size: 14px; }
-    .nav-item:hover { color: var(--cream); background: rgba(255,255,255,0.08); }
-    .nav-item.active {
-      color: var(--cream); background: var(--orange);
-      font-weight: 600;
-    }
-    .nav-spacer { flex: 1; }
-
-    .sidebar-footer {
-      padding: 16px 12px;
-      border-top: 1px solid rgba(255,255,255,0.08);
-    }
-    .nav-item.logout { color: rgba(251,248,243,0.4); }
-    .nav-item.logout:hover { color: #ff8080; background: rgba(255,80,80,0.08); }
-
-    /* ══════════════════════════════════════════
-       MAIN CONTENT
-    ══════════════════════════════════════════ */
-    .main {
-      flex: 1;
-      margin-left: var(--sidebar-w);
-      min-height: 100vh;
-    }
-
-    /* Top bar */
-    .topbar {
-      background: var(--white);
-      border-bottom: 1px solid var(--border);
-      padding: 0 32px;
-      height: 64px;
-      display: flex; align-items: center; justify-content: space-between;
-      position: sticky; top: 0; z-index: 50;
-    }
-    .topbar-left {
-      display: flex; align-items: center; gap: 14px;
-    }
-    .menu-toggle {
-      display: none;
-      background: none; border: none; cursor: pointer;
-      font-size: 20px; color: var(--brown); padding: 4px;
-    }
-    .topbar-title {
-      font-size: 16px; font-weight: 600; color: var(--brown);
-    }
-    .topbar-right {
-      display: flex; align-items: center; gap: 16px;
-    }
-    .topbar-user {
-      display: flex; align-items: center; gap: 10px;
-      font-size: 13px; color: var(--text-2);
-    }
-    .avatar {
-      width: 34px; height: 34px; border-radius: 50%;
-      background: var(--orange); color: var(--white);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 13px; font-weight: 700;
-    }
-    .topbar-link {
-      font-size: 12px; color: var(--text-3);
-      display: flex; align-items: center; gap: 5px;
-      transition: color var(--t);
-    }
-    .topbar-link:hover { color: var(--orange); }
-
-    /* Content area */
-    .content { padding: 28px 32px 48px; }
-
-    /* Welcome */
-    .welcome {
-      margin-bottom: 28px;
-    }
+    .welcome { margin-bottom: 28px; }
     .welcome h1 {
       font-family: 'Cormorant Garamond', serif;
-      font-size: 28px; font-weight: 700; color: var(--brown);
-      margin-bottom: 4px;
+      font-size: 28px; font-weight: 700; color: var(--brown); margin-bottom: 4px;
     }
     .welcome p { font-size: 13.5px; color: var(--text-3); }
 
-    /* ── Stat cards ── */
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 18px;
-      margin-bottom: 28px;
-    }
-    .stat-card {
-      background: var(--white);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 22px 20px;
-      transition: box-shadow var(--t);
-    }
-    .stat-card:hover { box-shadow: 0 4px 20px rgba(60,30,12,0.08); }
-    .stat-top {
-      display: flex; align-items: center; justify-content: space-between;
-      margin-bottom: 14px;
-    }
-    .stat-icon {
-      width: 38px; height: 38px; border-radius: 8px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 15px;
-    }
-    .stat-icon.orders   { background: #FFF3EB; color: var(--orange); }
-    .stat-icon.revenue  { background: #EEFBF0; color: var(--green); }
-    .stat-icon.products { background: #FFF8EB; color: var(--gold); }
-    .stat-icon.users    { background: #F0EEFB; color: #6A2AA0; }
-    .stat-change {
-      font-size: 11px; font-weight: 600; padding: 3px 8px;
-      border-radius: 20px;
-    }
-    .stat-change.up   { background: #EEFBF0; color: var(--green); }
-    .stat-change.down { background: #FDF0EF; color: var(--red); }
-    .stat-number {
-      font-size: 28px; font-weight: 700; color: var(--brown);
-      line-height: 1; margin-bottom: 4px;
-    }
-    .stat-label {
-      font-size: 12.5px; color: var(--text-3); letter-spacing: 0.3px;
-    }
+    .stat-change { font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 20px; }
+    .stat-change.up { background: #EEFBF0; color: var(--green); }
 
-    /* ── Table section ── */
-    .panel {
-      background: var(--white);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      overflow: hidden;
-    }
-    .panel-head {
-      padding: 18px 22px;
-      border-bottom: 1px solid var(--border);
-      display: flex; align-items: center; justify-content: space-between;
-    }
-    .panel-title {
-      font-size: 15px; font-weight: 600; color: var(--brown);
-    }
-    .panel-link {
-      font-size: 12px; color: var(--orange); font-weight: 500;
-      transition: color var(--t);
-    }
-    .panel-link:hover { color: var(--brown); }
+    .bottom-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 18px; }
 
-    table { width: 100%; border-collapse: collapse; }
-    thead th {
-      padding: 12px 22px;
-      font-size: 10.5px; font-weight: 700;
-      letter-spacing: 1.5px; text-transform: uppercase;
-      color: var(--text-3); text-align: left;
-      background: #FAF6F0;
-      border-bottom: 1px solid var(--border);
-    }
-    tbody td {
-      padding: 14px 22px;
-      font-size: 13.5px; color: var(--text-2);
-      border-bottom: 1px solid var(--border);
-      white-space: nowrap;
-    }
-    tbody tr:last-child td { border-bottom: none; }
-    tbody tr:hover { background: var(--cream); }
-
-    .order-id { font-weight: 600; color: var(--brown); }
-    .customer-cell {
-      display: flex; align-items: center; gap: 10px;
-    }
-    .customer-avatar {
-      width: 30px; height: 30px; border-radius: 50%;
-      background: var(--cream-2); color: var(--text-3);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 11px; font-weight: 600; flex-shrink: 0;
-    }
-
-    .status {
-      display: inline-flex; align-items: center; gap: 5px;
-      padding: 4px 10px; border-radius: 20px;
-      font-size: 11.5px; font-weight: 600;
-    }
-    .status-dot {
-      width: 6px; height: 6px; border-radius: 50%;
-    }
-    .status.confirmed  { background: #EEFBF0; color: var(--green); }
-    .status.confirmed .status-dot { background: var(--green); }
-    .status.processing { background: #FFF8EB; color: #A07000; }
-    .status.processing .status-dot { background: #BE8820; }
-    .status.shipped    { background: #EEF2FB; color: #2A5AB0; }
-    .status.shipped .status-dot { background: #2A5AB0; }
-    .status.delivered  { background: #F0EEFB; color: #6A2AA0; }
-    .status.delivered .status-dot { background: #6A2AA0; }
-
-    /* ── Bottom grid ── */
-    .bottom-grid {
-      display: grid; grid-template-columns: 1fr 1fr;
-      gap: 18px; margin-top: 18px;
-    }
-
-    /* Quick actions */
-    .quick-actions {
-      display: flex; flex-direction: column; gap: 8px;
-      padding: 18px 22px;
-    }
+    .quick-actions { display: flex; flex-direction: column; gap: 8px; padding: 18px 22px; }
     .quick-btn {
       display: flex; align-items: center; gap: 12px;
       padding: 14px 16px; border-radius: 8px;
-      border: 1px solid var(--border);
-      background: var(--cream); color: var(--text-2);
-      font-family: 'DM Sans', sans-serif;
-      font-size: 13.5px; font-weight: 500;
-      cursor: pointer; transition: all var(--t);
+      border: 1px solid var(--border); background: var(--cream); color: var(--text-2);
+      font-family: 'DM Sans', sans-serif; font-size: 13.5px; font-weight: 500;
+      cursor: pointer; transition: all var(--t); text-decoration: none;
     }
     .quick-btn i { width: 18px; text-align: center; color: var(--orange); }
-    .quick-btn:hover {
-      border-color: var(--orange); color: var(--orange);
-      background: var(--white);
-    }
+    .quick-btn:hover { border-color: var(--orange); color: var(--orange); background: var(--white); }
 
-    /* Top products */
     .top-product {
       display: flex; align-items: center; gap: 14px;
-      padding: 14px 22px;
-      border-bottom: 1px solid var(--border);
+      padding: 14px 22px; border-bottom: 1px solid var(--border);
     }
     .top-product:last-child { border-bottom: none; }
     .top-product-img {
       width: 44px; height: 44px; border-radius: 8px;
-      overflow: hidden; flex-shrink: 0;
-      border: 1px solid var(--border);
+      overflow: hidden; flex-shrink: 0; border: 1px solid var(--border);
     }
     .top-product-img .ph { width: 100%; height: 100%; }
     .top-product-info { flex: 1; }
-    .top-product-name {
-      font-size: 13.5px; font-weight: 500; color: var(--brown);
-      margin-bottom: 2px;
-    }
+    .top-product-name { font-size: 13.5px; font-weight: 500; color: var(--brown); margin-bottom: 2px; }
     .top-product-sales { font-size: 11.5px; color: var(--text-3); }
-    .top-product-rev {
-      font-size: 13.5px; font-weight: 600; color: var(--orange);
-    }
+    .top-product-rev { font-size: 13.5px; font-weight: 600; color: var(--orange); }
 
-    /* Placeholder colors */
-    .ph { width:100%; height:100%; }
-    .ph-red    { background: linear-gradient(135deg,#7A1010,#C0421A,#E08040); }
-    .ph-blue   { background: linear-gradient(135deg,#0A2860,#1A5AB0,#5080D0); }
-    .ph-gold   { background: linear-gradient(135deg,#4A2A00,#9A6210,#D09840); }
-    .ph-green  { background: linear-gradient(135deg,#0A4015,#1A7030,#50A060); }
-    .ph-pink   { background: linear-gradient(135deg,#6A0A30,#B02858,#E06080); }
+    .order-id { font-weight: 600; color: var(--brown); }
 
-    /* Mobile overlay */
-    .sidebar-overlay {
-      display: none; position: fixed; inset: 0;
-      background: rgba(0,0,0,0.4); z-index: 99;
-    }
-    .sidebar-overlay.show { display: block; }
-
-    /* ══════════════════════════════════════════
-       RESPONSIVE
-    ══════════════════════════════════════════ */
-    @media (max-width: 1100px) {
-      .stats-grid { grid-template-columns: repeat(2, 1fr); }
-      .bottom-grid { grid-template-columns: 1fr; }
-    }
-
-    @media (max-width: 768px) {
-      .sidebar {
-        transform: translateX(-100%);
-      }
-      .sidebar.open { transform: translateX(0); }
-      .main { margin-left: 0; }
-      .menu-toggle { display: block; }
-      .topbar { padding: 0 20px; }
-      .content { padding: 20px; }
-      .stats-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
-      .stat-card { padding: 18px 16px; }
-      .stat-number { font-size: 24px; }
-
-      /* Make table scroll horizontally */
-      .table-scroll { overflow-x: auto; }
-    }
-
-    @media (max-width: 480px) {
-      .stats-grid { grid-template-columns: 1fr; }
-      .welcome h1 { font-size: 24px; }
-      .topbar-user span { display: none; }
-    }
+    @media (max-width: 1100px) { .bottom-grid { grid-template-columns: 1fr; } }
+    @media (max-width: 480px) { .welcome h1 { font-size: 24px; } }
   </style>
 </head>
 <body>
 
-<!-- ── Sidebar Overlay (mobile) ── -->
 <div class="sidebar-overlay" id="overlay" onclick="closeSidebar()"></div>
-
-<!-- ── Sidebar ── -->
 <aside class="sidebar" id="sidebar">
-  <div class="sidebar-brand">
-    <img src="../assets/images/logo.png" alt="Rang Mahal" />
-    <div class="sidebar-brand-text">
-      <h2>Rang Mahal</h2>
-      <span>Admin</span>
-    </div>
-  </div>
-
+  <div class="sidebar-brand"><img src="../assets/images/logo.png" alt="Rang Mahal" /><div class="sidebar-brand-text"><h2>Rang Mahal</h2><span>Admin</span></div></div>
   <nav class="sidebar-nav">
-    <a class="nav-item active" href="dashboard.html">
-      <i class="fas fa-th-large"></i> Dashboard
-    </a>
-    <a class="nav-item" href="#">
-      <i class="fas fa-box"></i> Orders
-    </a>
-    <a class="nav-item" href="#">
-      <i class="fas fa-tags"></i> Products
-    </a>
-    <a class="nav-item" href="#">
-      <i class="fas fa-users"></i> Customers
-    </a>
-    <a class="nav-item" href="#">
-      <i class="fas fa-cog"></i> Settings
-    </a>
-
+    <a class="nav-item active" href="dashboard.html"><i class="fas fa-th-large"></i> Dashboard</a>
+    <a class="nav-item" href="orders.html"><i class="fas fa-box"></i> Orders</a>
+    <a class="nav-item" href="products.html"><i class="fas fa-tags"></i> Products</a>
+    <a class="nav-item" href="customers.html"><i class="fas fa-users"></i> Customers</a>
+    <a class="nav-item" href="settings.html"><i class="fas fa-cog"></i> Settings</a>
     <div class="nav-spacer"></div>
   </nav>
-
-  <div class="sidebar-footer">
-    <a class="nav-item logout" href="login.html">
-      <i class="fas fa-right-from-bracket"></i> Log Out
-    </a>
-  </div>
+  <div class="sidebar-footer"><a class="nav-item logout" href="login.html"><i class="fas fa-right-from-bracket"></i> Log Out</a></div>
 </aside>
 
-<!-- ── Main ── -->
 <div class="main">
-
-  <!-- Top bar -->
   <header class="topbar">
     <div class="topbar-left">
-      <button class="menu-toggle" onclick="toggleSidebar()">
-        <i class="fas fa-bars"></i>
-      </button>
+      <button class="menu-toggle" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
       <span class="topbar-title">Dashboard</span>
     </div>
     <div class="topbar-right">
-      <a href="../index.html" class="topbar-link">
-        <i class="fas fa-external-link-alt"></i> View Store
-      </a>
-      <div class="topbar-user">
-        <div class="avatar">A</div>
-        <span>Admin</span>
-      </div>
+      <a href="../index.html" class="topbar-link"><i class="fas fa-external-link-alt"></i> View Store</a>
+      <div class="topbar-user"><div class="avatar">A</div><span>Admin</span></div>
     </div>
   </header>
 
-  <!-- Content -->
   <div class="content">
 
     <div class="welcome">
-      <h1>Good morning, Admin</h1>
+      <h1 id="greeting">Good morning, Admin</h1>
       <p>Here's what's happening with your store today.</p>
     </div>
 
-    <!-- Stat cards -->
+    <!-- Stats -->
     <div class="stats-grid">
       <div class="stat-card">
         <div class="stat-top">
           <div class="stat-icon orders"><i class="fas fa-shopping-bag"></i></div>
           <span class="stat-change up">↑ 12%</span>
         </div>
-        <div class="stat-number">156</div>
+        <div class="stat-number" id="dOrders">0</div>
         <div class="stat-label">Total Orders</div>
       </div>
       <div class="stat-card">
@@ -447,15 +102,14 @@
           <div class="stat-icon revenue"><i class="fas fa-indian-rupee-sign"></i></div>
           <span class="stat-change up">↑ 8%</span>
         </div>
-        <div class="stat-number">₹72,450</div>
+        <div class="stat-number" id="dRevenue">₹0</div>
         <div class="stat-label">Revenue</div>
       </div>
       <div class="stat-card">
         <div class="stat-top">
           <div class="stat-icon products"><i class="fas fa-tags"></i></div>
-          <span class="stat-change up">↑ 3</span>
         </div>
-        <div class="stat-number">48</div>
+        <div class="stat-number" id="dProducts">0</div>
         <div class="stat-label">Products</div>
       </div>
       <div class="stat-card">
@@ -463,16 +117,16 @@
           <div class="stat-icon users"><i class="fas fa-users"></i></div>
           <span class="stat-change up">↑ 18%</span>
         </div>
-        <div class="stat-number">312</div>
+        <div class="stat-number" id="dCustomers">0</div>
         <div class="stat-label">Customers</div>
       </div>
     </div>
 
-    <!-- Recent orders table -->
+    <!-- Recent orders -->
     <div class="panel">
       <div class="panel-head">
         <span class="panel-title">Recent Orders</span>
-        <a href="#" class="panel-link">View All →</a>
+        <a href="orders.html" class="panel-link">View All →</a>
       </div>
       <div class="table-scroll">
         <table>
@@ -486,139 +140,30 @@
               <th>Date</th>
             </tr>
           </thead>
-          <tbody>
-            <tr>
-              <td class="order-id">#RM-1024</td>
-              <td>
-                <div class="customer-cell">
-                  <div class="customer-avatar">PS</div>
-                  Priya Sharma
-                </div>
-              </td>
-              <td>Bridal Lac Set — Scarlet</td>
-              <td>₹549</td>
-              <td><span class="status confirmed"><span class="status-dot"></span>Confirmed</span></td>
-              <td>19 Jun 2026</td>
-            </tr>
-            <tr>
-              <td class="order-id">#RM-1023</td>
-              <td>
-                <div class="customer-cell">
-                  <div class="customer-avatar">AK</div>
-                  Ankit Kumar
-                </div>
-              </td>
-              <td>Meenakari Set — Royal Blue</td>
-              <td>₹399</td>
-              <td><span class="status shipped"><span class="status-dot"></span>Shipped</span></td>
-              <td>18 Jun 2026</td>
-            </tr>
-            <tr>
-              <td class="order-id">#RM-1022</td>
-              <td>
-                <div class="customer-cell">
-                  <div class="customer-avatar">NJ</div>
-                  Neha Joshi
-                </div>
-              </td>
-              <td>Zardosi Set — Gold &amp; Ivory</td>
-              <td>₹1,298</td>
-              <td><span class="status processing"><span class="status-dot"></span>Processing</span></td>
-              <td>18 Jun 2026</td>
-            </tr>
-            <tr>
-              <td class="order-id">#RM-1021</td>
-              <td>
-                <div class="customer-cell">
-                  <div class="customer-avatar">RV</div>
-                  Riya Verma
-                </div>
-              </td>
-              <td>Gota Patti Set — Blush Pink</td>
-              <td>₹429</td>
-              <td><span class="status delivered"><span class="status-dot"></span>Delivered</span></td>
-              <td>17 Jun 2026</td>
-            </tr>
-            <tr>
-              <td class="order-id">#RM-1020</td>
-              <td>
-                <div class="customer-cell">
-                  <div class="customer-avatar">SM</div>
-                  Sonal Mehra
-                </div>
-              </td>
-              <td>Kundan Set — Deep Violet</td>
-              <td>₹349</td>
-              <td><span class="status delivered"><span class="status-dot"></span>Delivered</span></td>
-              <td>16 Jun 2026</td>
-            </tr>
-          </tbody>
+          <tbody id="ordersTbody"></tbody>
         </table>
       </div>
     </div>
 
-    <!-- Bottom: Quick actions + Top products -->
+    <!-- Bottom -->
     <div class="bottom-grid">
 
-      <!-- Quick actions -->
       <div class="panel">
-        <div class="panel-head">
-          <span class="panel-title">Quick Actions</span>
-        </div>
+        <div class="panel-head"><span class="panel-title">Quick Actions</span></div>
         <div class="quick-actions">
-          <button class="quick-btn"><i class="fas fa-plus"></i> Add New Product</button>
-          <button class="quick-btn"><i class="fas fa-box"></i> View Pending Orders</button>
-          <button class="quick-btn"><i class="fas fa-percent"></i> Create Discount</button>
-          <button class="quick-btn"><i class="fas fa-cog"></i> Store Settings</button>
+          <a href="products.html" class="quick-btn"><i class="fas fa-plus"></i> Add New Product</a>
+          <a href="orders.html" class="quick-btn"><i class="fas fa-box"></i> View Pending Orders</a>
+          <a href="customers.html" class="quick-btn"><i class="fas fa-users"></i> View Customers</a>
+          <a href="settings.html" class="quick-btn"><i class="fas fa-cog"></i> Store Settings</a>
         </div>
       </div>
 
-      <!-- Top selling -->
       <div class="panel">
         <div class="panel-head">
           <span class="panel-title">Top Selling</span>
-          <a href="#" class="panel-link">All Products →</a>
+          <a href="products.html" class="panel-link">All Products →</a>
         </div>
-        <div class="top-product">
-          <div class="top-product-img"><div class="ph ph-red"></div></div>
-          <div class="top-product-info">
-            <div class="top-product-name">Bridal Lac Set — Scarlet</div>
-            <div class="top-product-sales">42 sold</div>
-          </div>
-          <div class="top-product-rev">₹23,058</div>
-        </div>
-        <div class="top-product">
-          <div class="top-product-img"><div class="ph ph-gold"></div></div>
-          <div class="top-product-info">
-            <div class="top-product-name">Zardosi Set — Gold &amp; Ivory</div>
-            <div class="top-product-sales">31 sold</div>
-          </div>
-          <div class="top-product-rev">₹20,119</div>
-        </div>
-        <div class="top-product">
-          <div class="top-product-img"><div class="ph ph-blue"></div></div>
-          <div class="top-product-info">
-            <div class="top-product-name">Meenakari Set — Royal Blue</div>
-            <div class="top-product-sales">28 sold</div>
-          </div>
-          <div class="top-product-rev">₹11,172</div>
-        </div>
-        <div class="top-product">
-          <div class="top-product-img"><div class="ph ph-pink"></div></div>
-          <div class="top-product-info">
-            <div class="top-product-name">Gota Patti Set — Blush Pink</div>
-            <div class="top-product-sales">24 sold</div>
-          </div>
-          <div class="top-product-rev">₹10,296</div>
-        </div>
-        <div class="top-product">
-          <div class="top-product-img"><div class="ph ph-green"></div></div>
-          <div class="top-product-info">
-            <div class="top-product-name">Floral Set — Emerald</div>
-            <div class="top-product-sales">19 sold</div>
-          </div>
-          <div class="top-product-rev">₹9,101</div>
-        </div>
+        <div id="topProducts"></div>
       </div>
 
     </div>
@@ -626,15 +171,41 @@
   </div>
 </div>
 
+<script src="admin-data.js"></script>
 <script>
-  function toggleSidebar() {
-    document.getElementById('sidebar').classList.toggle('open');
-    document.getElementById('overlay').classList.toggle('show');
-  }
-  function closeSidebar() {
-    document.getElementById('sidebar').classList.remove('open');
-    document.getElementById('overlay').classList.remove('show');
-  }
+  const stats = DB.stats();
+  document.getElementById('dOrders').textContent = stats.totalOrders;
+  document.getElementById('dRevenue').textContent = formatPrice(stats.revenue);
+  document.getElementById('dProducts').textContent = stats.totalProducts;
+  document.getElementById('dCustomers').textContent = stats.totalCustomers;
+
+  const hour = new Date().getHours();
+  const greet = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
+  document.getElementById('greeting').textContent = greet + ', Admin';
+
+  const orders = DB.orders().slice(0, 5);
+  document.getElementById('ordersTbody').innerHTML = orders.map(o => `
+    <tr>
+      <td class="order-id">#${o.id}</td>
+      <td><div class="customer-cell"><div class="customer-avatar">${o.initials}</div>${o.customer}</div></td>
+      <td>${o.product}</td>
+      <td style="font-weight:600;color:var(--orange);">${formatPrice(o.amount)}</td>
+      <td><span class="status ${o.status}"><span class="status-dot"></span>${o.status.charAt(0).toUpperCase()+o.status.slice(1)}</span></td>
+      <td>${o.date}</td>
+    </tr>
+  `).join('');
+
+  const products = DB.products().slice(0, 5);
+  document.getElementById('topProducts').innerHTML = products.map(p => `
+    <div class="top-product">
+      <div class="top-product-img"><div class="ph ${p.color}"></div></div>
+      <div class="top-product-info">
+        <div class="top-product-name">${p.name}</div>
+        <div class="top-product-sales">${p.stock} in stock</div>
+      </div>
+      <div class="top-product-rev">${formatPrice(p.price)}</div>
+    </div>
+  `).join('');
 </script>
 </body>
 </html>

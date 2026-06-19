@@ -361,7 +361,7 @@
       <!-- Price breakdown -->
       <div class="summary-row">
         <span>Subtotal</span>
-        <span>₹549</span>
+        <span id="order-subtotal" data-amount="549">₹549</span>
       </div>
       <div class="summary-row">
         <span>Shipping</span>
@@ -369,11 +369,11 @@
       </div>
       <div class="summary-row">
         <span>Gift Packaging</span>
-        <span>₹49</span>
+        <span id="gift-price">₹49</span>
       </div>
       <div class="summary-row total">
         <span>Total</span>
-        <span class="total-amt">₹598</span>
+        <span class="total-amt" id="order-total">₹598</span>
       </div>
     </div>
 
@@ -422,5 +422,6 @@
     }
   });
 </script>
+<script src="assets/js/sync.js"></script>
 </body>
 </html>

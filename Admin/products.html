@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Products — Rang Mahal Admin</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="admin.css" />
+  <style>
+    .product-thumb {
+      width: 40px; height: 40px; border-radius: 6px;
+      overflow: hidden; flex-shrink: 0; border: 1px solid var(--border);
+    }
+    .product-thumb .ph { width: 100%; height: 100%; }
+    .product-cell { display: flex; align-items: center; gap: 12px; }
+    .product-cell-name { font-weight: 500; color: var(--brown); }
+    .product-cell-cat { font-size: 11px; color: var(--text-3); }
+    .stock-low { color: var(--red); font-weight: 600; }
+    .badge-active { background: #EEFBF0; color: var(--green); padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+    .badge-draft  { background: var(--cream-2); color: var(--text-3); padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+    .top-actions { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+    .search-box {
+      display: flex; align-items: center; gap: 8px;
+      border: 1px solid var(--border); border-radius: 6px;
+      padding: 8px 14px; background: var(--white);
+    }
+    .search-box i { color: var(--text-3); font-size: 13px; }
+    .search-box input {
+      border: none; background: transparent; font-family: 'DM Sans', sans-serif;
+      font-size: 13px; color: var(--text); outline: none; width: 180px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="sidebar-overlay" id="overlay" onclick="closeSidebar()"></div>
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-brand"><img src="../assets/images/logo.png" alt="Rang Mahal" /><div class="sidebar-brand-text"><h2>Rang Mahal</h2><span>Admin</span></div></div>
+  <nav class="sidebar-nav">
+    <a class="nav-item" href="dashboard.html"><i class="fas fa-th-large"></i> Dashboard</a>
+    <a class="nav-item" href="orders.html"><i class="fas fa-box"></i> Orders</a>
+    <a class="nav-item active" href="products.html"><i class="fas fa-tags"></i> Products</a>
+    <a class="nav-item" href="customers.html"><i class="fas fa-users"></i> Customers</a>
+    <a class="nav-item" href="settings.html"><i class="fas fa-cog"></i> Settings</a>
+    <div class="nav-spacer"></div>
+  </nav>
+  <div class="sidebar-footer"><a class="nav-item logout" href="login.html"><i class="fas fa-right-from-bracket"></i> Log Out</a></div>
+</aside>
+
+<div class="main">
+  <header class="topbar">
+    <div class="topbar-left">
+      <button class="menu-toggle" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+      <span class="topbar-title">Products</span>
+    </div>
+    <div class="topbar-right">
+      <a href="../index.html" class="topbar-link"><i class="fas fa-external-link-alt"></i> View Store</a>
+      <div class="topbar-user"><div class="avatar">A</div><span>Admin</span></div>
+    </div>
+  </header>
+
+  <div class="content">
+
+    <div class="panel">
+      <div class="panel-head">
+        <div class="top-actions">
+          <span class="panel-title">All Products (<span id="count">0</span>)</span>
+          <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" id="searchInput" placeholder="Search products…" oninput="renderProducts()" />
+          </div>
+        </div>
+        <button class="btn-primary" onclick="openModal()"><i class="fas fa-plus"></i> Add Product</button>
+      </div>
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr>
+              <th>Product</th>
+              <th>Price</th>
+              <th>MRP</th>
+              <th>Stock</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
+      <div class="empty" id="empty" style="display:none;">
+        <i class="fas fa-tags"></i>
+        <h3>No products found</h3>
+        <p>Add your first product to get started.</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="modalTitle">Add Product</h3>
+      <button class="modal-close" onclick="closeModal()">×</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="editId" />
+      <div class="form-group">
+        <label>Product Name</label>
+        <input type="text" class="form-input" id="fName" placeholder="Bridal Lac Set — Scarlet & Gold" />
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Category</label>
+          <select class="form-input" id="fCategory">
+            <option>Lac Bangles</option>
+            <option>Jewellery</option>
+            <option>Blue Pottery</option>
+            <option>Textiles</option>
+            <option>Mojris</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Status</label>
+          <select class="form-input" id="fStatus">
+            <option value="active">Active</option>
+            <option value="draft">Draft</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Price (₹)</label>
+          <input type="number" class="form-input" id="fPrice" placeholder="549" />
+        </div>
+        <div class="form-group">
+          <label>MRP (₹)</label>
+          <input type="number" class="form-input" id="fMrp" placeholder="799" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Stock Quantity</label>
+        <input type="number" class="form-input" id="fStock" placeholder="24" />
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeModal()">Cancel</button>
+      <button class="btn-primary" onclick="saveProduct()"><i class="fas fa-check"></i> Save Product</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"><i class="fas fa-check-circle"></i> <span id="toastMsg"></span></div>
+
+<script src="admin-data.js"></script>
+<script>
+  const COLORS = ['ph-red','ph-blue','ph-gold','ph-green','ph-purple','ph-pink','ph-teal','ph-maroon','ph-saffron','ph-ivory','ph-navy','ph-rose'];
+
+  function renderProducts() {
+    const products = DB.products();
+    const q = document.getElementById('searchInput').value.toLowerCase();
+    const filtered = q ? products.filter(p => p.name.toLowerCase().includes(q) || p.category.toLowerCase().includes(q)) : products;
+
+    document.getElementById('count').textContent = filtered.length;
+    const tbody = document.getElementById('tbody');
+    const empty = document.getElementById('empty');
+
+    if (!filtered.length) { tbody.innerHTML = ''; empty.style.display = 'block'; return; }
+    empty.style.display = 'none';
+
+    tbody.innerHTML = filtered.map(p => `
+      <tr>
+        <td>
+          <div class="product-cell">
+            <div class="product-thumb"><div class="ph ${p.color || 'ph-gold'}"></div></div>
+            <div><div class="product-cell-name">${p.name}</div><div class="product-cell-cat">${p.category}</div></div>
+          </div>
+        </td>
+        <td>${formatPrice(p.price)}</td>
+        <td style="color:var(--text-3);text-decoration:line-through;">${formatPrice(p.mrp)}</td>
+        <td class="${p.stock <= 10 ? 'stock-low' : ''}">${p.stock}${p.stock <= 10 ? ' ⚠' : ''}</td>
+        <td><span class="badge-${p.status}">${p.status === 'active' ? 'Active' : 'Draft'}</span></td>
+        <td>
+          <div class="row-actions">
+            <button class="row-btn" title="Edit" onclick="editProduct(${p.id})"><i class="fas fa-pen"></i></button>
+            <button class="row-btn delete" title="Delete" onclick="deleteProduct(${p.id})"><i class="fas fa-trash"></i></button>
+          </div>
+        </td>
+      </tr>
+    `).join('');
+  }
+
+  function openModal(id) {
+    document.getElementById('modal').classList.add('show');
+    document.getElementById('modalTitle').textContent = id ? 'Edit Product' : 'Add Product';
+    document.getElementById('editId').value = id || '';
+    if (!id) { ['fName','fPrice','fMrp','fStock'].forEach(f => document.getElementById(f).value = ''); document.getElementById('fCategory').value = 'Lac Bangles'; document.getElementById('fStatus').value = 'active'; }
+  }
+  function closeModal() { document.getElementById('modal').classList.remove('show'); }
+
+  function editProduct(id) {
+    const p = DB.products().find(x => x.id === id);
+    if (!p) return;
+    openModal(id);
+    document.getElementById('fName').value = p.name;
+    document.getElementById('fCategory').value = p.category;
+    document.getElementById('fPrice').value = p.price;
+    document.getElementById('fMrp').value = p.mrp;
+    document.getElementById('fStock').value = p.stock;
+    document.getElementById('fStatus').value = p.status;
+  }
+
+  function saveProduct() {
+    const name = document.getElementById('fName').value.trim();
+    const price = parseInt(document.getElementById('fPrice').value);
+    const mrp = parseInt(document.getElementById('fMrp').value);
+    const stock = parseInt(document.getElementById('fStock').value);
+    if (!name || !price) { alert('Please fill in product name and price.'); return; }
+
+    const products = DB.products();
+    const editId = parseInt(document.getElementById('editId').value);
+
+    if (editId) {
+      const idx = products.findIndex(p => p.id === editId);
+      if (idx !== -1) {
+        products[idx].name = name;
+        products[idx].category = document.getElementById('fCategory').value;
+        products[idx].price = price;
+        products[idx].mrp = mrp || price;
+        products[idx].stock = stock || 0;
+        products[idx].status = document.getElementById('fStatus').value;
+      }
+      showToast('Product updated successfully');
+    } else {
+      products.push({
+        id: DB.nextProductId(),
+        name, category: document.getElementById('fCategory').value,
+        price, mrp: mrp || price, stock: stock || 0,
+        status: document.getElementById('fStatus').value,
+        color: COLORS[Math.floor(Math.random() * COLORS.length)]
+      });
+      showToast('Product added successfully');
+    }
+
+    DB.saveProducts(products);
+    closeModal();
+    renderProducts();
+  }
+
+  function deleteProduct(id) {
+    if (!confirm('Delete this product?')) return;
+    const products = DB.products().filter(p => p.id !== id);
+    DB.saveProducts(products);
+    showToast('Product deleted');
+    renderProducts();
+  }
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    document.getElementById('toastMsg').textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2500);
+  }
+
+  renderProducts();
+</script>
+</body>
+</html>
